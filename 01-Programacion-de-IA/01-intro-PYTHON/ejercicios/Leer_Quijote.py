@@ -52,6 +52,30 @@ lineas_quijote2
 
 
 
+def buscador_palabras(ubicacion_libro, personaje):
+    with open(ubicacion_libro, "r", encoding = "utf8") as archivo:
+        lineas = archivo.readlines()
+        # Hemos puesto .lower() de esta manera podemos buscar cualquier palabra 
+        # que empiece por minúscula o mayúscula
+    """
+    lineas_seleccionadas = []
+    for linea in lineas:
+        if palabra.lower() in linea.lower():
+            lineas_seleccionadas.append(linea)
+    """
+    lineas_seleccionadas = [linea for linea in lineas if personaje.lower() in linea.lower()]
+    return lineas_seleccionadas
+
+ubicacion_libro = r"teoria/datos/quijote.txt"
+
+personaje = "Casa"
+
+lineas_quijote_def = buscador_palabras(ubicacion_libro, personaje)
+
+
+
+# Ejemplo de generador
+
 import time
 
 time.sleep(0.001)
@@ -75,11 +99,3 @@ ubicacion_libro = r"teoria/datos/quijote.txt"
 personaje = "Casa"
 
 lineas_quijote_def = buscador_palabras(ubicacion_libro, personaje)
-
-
-
-
-
-
-
-
