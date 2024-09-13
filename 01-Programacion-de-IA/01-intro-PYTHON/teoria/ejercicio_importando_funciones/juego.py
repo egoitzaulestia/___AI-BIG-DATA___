@@ -5,40 +5,49 @@ Created on Thu Sep 12 12:36:23 2024
 @author: 2425BIGDATA401
 """
 
-import random
+# Importamos la función randint() de la librería random para poder generar numeros aleatorios
+from random import randint
 
+
+# Función para crear un número aleatori
 def num_aleatorio():
-   num_ale = random.randint(0, 100)
+   num_ale = randint(0, 100)
    return num_ale
 
-# num_aleatorio()   
-    
+
+# Función para pedir que le jugador introduzca un número
 def introducir_num():
-    num_jugador = int(input("Introduce un número: "))
+    num_jugador = int(input("\nIntroduce un número: "))
     return num_jugador
 
 
-# num_aleatorio()
-
+# Función que inicializa el juego
 def jugar():
-    print("""
+    print("""\n
           Bienvenido!!!
           Soy tu nuevo amigo AGI.
           Averigua que numero estoy pensando (del 0 al 100)!
+          Teienes 10 intentos!
           """)
     numero_agi = num_aleatorio()
     # print(numero_agi)
     
-    contador = 0
+    contador = 10
     while True:
         numero_jugador = introducir_num()
 
         if numero_agi == numero_jugador:
-            print(f"YEAH! Acertaste! Intentos {contador}")
+            print(f"\nYEAH! Acertaste! Intentos {contador}")
+            print("Has ganado el juego.")
             break
         elif not numero_agi == numero_jugador:
             print(f"HAHAHA! Has fallado! Intentos {contador}")
-        contador += 1
-
-# # Llamamos a la función principal
-# juega()
+            print("Intenta con otro número.")
+        contador -= 1
+        if contador < 0:
+            print("\nHAS PERDIDO!!\nYa no te quedan mas intentos.")
+            print(f"\nEl número en el que estaba pensando era {numero_agi}")
+            break
+        
+        
+jugar()

@@ -34,6 +34,7 @@ Con esto se logra
     millones de elementos sin necesidad de almacenarlos previamente.
 """
 
+
 generador_de_primos = primos(0,20)
 
 next(generador_de_primos)
