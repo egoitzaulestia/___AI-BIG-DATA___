@@ -2,7 +2,7 @@ rm(list=ls())
 
 # 1. Cargar los datos de trainmod (Los creados en el apartado anterior).
 
-datos <- read.csv("trainmod.csv",header = TRUE,sep = ",",stringsAsFactors = TRUE)
+datos <- read.csv("trainmod.csv", header = TRUE, sep = ",", stringsAsFactors = TRUE)
 
 
 # 2. Mostrar los datos.
@@ -42,17 +42,20 @@ boxplot(datos$SalePrice, main="Gráfico de Caja del Precio de Venta", ylab="Prec
 # hacia la derecha (precios más altos), lo que indica que la mayoría de las casas se venden por precios más bajos, 
 # con algunas excepciones que se venden a precios significativamente más altos.
 
+library(ggplot2)
+ggplot(datos,aes(x=SalePrice))+geom_histogram(binwidth=5000)
+
 
 # 8. Realizar un histograma del precio de venta.
-hist(datos$SalePrice,main = "Distribucion del Precio de Venta", 
+hist(datos$SalePrice, main = "Distribucion del Precio de Venta", 
      xlab = "Precio de Venta", ylab = "Frecuencia de Ventas", col= "blue")
 
 
 # 9. Graficar el precio de venta en función de la variable MSZoning.
 
 # Tambien podemos analizar la temperatura max en funcion de los eventos.
-plot(datos$MSZoning,datos$SalePrice, main="Boxplots: Zonificación vs Precio de Venta", 
-     xlab="Zonificación", ylab="Precio de Venta", las=2,cex.axis=0.5)
+plot(datos$MSZoning, datos$SalePrice, main="Boxplots: Zonificación vs Precio de Venta", 
+     xlab="Zonificación", ylab="Precio de Venta", las=2, cex.axis=0.5)
 
 
 # 10. Mostrar, gráficamente la relación entre el precio de venta y “GrLivArea”. ¿Como es?.
@@ -66,10 +69,13 @@ plot(datos$GrLivArea, datos$SalePrice, main="Gráfico de Dispersión: Área Habi
      xlab="Área Habitable (GrLivArea)", ylab="Precio de Venta", col="blue")
 
 # Scatter Plot (gráfico de nubes) del precio de venta y “LotArea”:
-# En este caso, vemos outliers muy exagerados en el área de la superficie (LotArea), 
+# En este caso, no tenemos una relación lineal (se ve más claro en la segunda gráfico) y vemos outliers muy exagerados en el área de la superficie (LotArea), 
 # los cuales distorsionan la interpretación general del gráfico, al forzar una escala más amplia 
 # que dificulta observar la tendencia central de los datos.
 plot(datos$LotArea, datos$SalePrice, main="Gráfico de Dispersión: Área de la Superficie vs Precio de Venta", 
+     xlab="Área de la Superficie (LotArea)", ylab="Precio de Venta", col="blue")
+
+plot(datos$SalePrice, datos$LotArea, main="Gráfico de Dispersión: Área de la Superficie vs Precio de Venta", 
      xlab="Área de la Superficie (LotArea)", ylab="Precio de Venta", col="blue")
 
 
@@ -83,6 +89,8 @@ barplot(zonas, main="Distribución de la Zonificación (MSZoning)", xlab="Zonifi
 
 
 # 12. Seleccionar los datos numéricos.
+# Para poder seleccionar todas las variables numéricas creamos un filtro con la función sapply() 
+# recogiendo todas las variables numéricas mediante is.numeric()
 datosNum = datos[,sapply(datos,is.numeric)]
 
 
