@@ -1,2 +1,2 @@
-# ___ Artificial Intelligence and Big Data ___
+# ___ Artificial Intelligence & Big Data ___
 
