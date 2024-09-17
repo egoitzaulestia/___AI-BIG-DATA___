@@ -190,3 +190,4 @@ corrplot(cor(datosNumSinNA), method="pie", shade.col=NA, tl.col="black",
 # 19. Guardar los datos.
 write.csv(datos, "trainmod.csv", row.names=FALSE)
 
+
