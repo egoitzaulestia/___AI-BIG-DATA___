@@ -261,6 +261,15 @@ edad_usuario = introducir_edad()
 edad_usuario
 
 
+# Versión PROFE -> Aún no esta termindado
+
+def ingrese_edad():
+    edad_str = int(input("Introduce el edad: "))
+    if not edad_str.isnumeric():
+        raise TypeError("La edad no puede ser texto")
+    edad = int(edad_str)
+    if edad >
+
 # 2. A continuación, un bucle infinito "while True" que pida la edad y trate el error
 # generado por la función. El bucle parará cuando la edad sea correcta.
 

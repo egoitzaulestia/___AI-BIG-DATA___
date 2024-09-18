@@ -100,6 +100,8 @@ def tiene_decimales(num):
 
 iterable_num_decimales = filter(tiene_decimales, lista_num)
 next(iterable_num_decimales)
+next(iterable_num_decimales)
+next(iterable_num_decimales)
 
 lista_num_decimales = list(iterable_num_decimales)
 
@@ -168,16 +170,44 @@ iterable3 = map(lambda x, y: x + y, lista_num, lista_num2)
 
 lista_num3 = list(iterable3)
 
+
+lista_ejemplo = [duplica(letra) for letra in lista_letras]
+
+
+
 #___________#
 # Ejercicio #
 #-----------#
 # Crear una lista con los números de 0 al 100.
 
+lista_num_new = list(range(101))
+
 
 # Dividirlos entre tres con map y una función lambda.
 
+def division(x):
+    return x / 3
+
+lista_num_new_divida = list(map(division, lista_num_new))
+
+lista_num_new_divida_2 = list(map(lambda x: x / 3, lista_num_new))
+
 
 # Filtrar los que tienen parte decimal con una función lambda.
+
+
+def filtrar_decimal(x):
+    if x != int(x):
+        return True
+    else:
+        return False
+    
+lista_num_new_filtered = list(filter(filtrar_decimal,lista_num_new_divida))
+for elemento in lista_num_new_filtered:
+    print(elemento)
+
+lista_num_new_filtered_2 = filter(lambda x: x != int(x), lista_num_new_divida)
+
 
 
 #__________#
@@ -191,11 +221,46 @@ lista_num3 = list(iterable3)
 import random
 # Creamos una lista de edades que por error contiene números negativos y excesivos
 edades = [random.randint(-7, 130) for i in range(500)]
-edades.count(-3)
+edades.count(0)
 edades.count(121)
 
 
 # Usar filter para eliminar los valores
 
+def filtrar_edades(edad):
+    if edad >= 0 and edad < 120:
+        return True
+    else:
+        return False
+    
+    
+def filtrar_edades_depurado(edad):
+    return edad >= 0 and edad <= 120
+
+    
+
+filtrar_edades(100)
+
+edades_filtradas = list(filter(filtrar_edades, edades))
+edades_filtradas.count(0)
+
+for edad in edades_filtradas:
+    print(edad)
+
+lista_edades_OK = list(filter(filtrar_edades, edades))
 
 # Usar map para sustituirlos por 120 o 0
+
+def corregir_edades(edad):
+    if edad < 0:
+        return 0
+    elif edad > 120:
+        return 120
+    else:
+        return edad
+
+edades_corregidas = list(map(corregir_edades, edades))
+
+edades_corregidos_lambda = list(map(lambda edad: 120 if edad > 120 else (0 if edad < 0 else edada), edades))
+
+edades_corregidas.count(120)
