@@ -97,6 +97,82 @@ lista_primos(70.4)
 
 
 
+# PROFE
+
+def es_primo(numero):
+    es_primo = True
+    factor = 2
+    
+    # Buscamos factores menores que el número
+    while factor <= int(numero**0.5):
+        if numero % factor == 0:
+            # Al encontrar el factor no es primo y paramos
+            es_primo = False
+            # print(factor)
+            break
+        factor += 1
+        
+    return es_primo
+
+
+def verificar_entrada(func):
+    def wrapper(entrada):
+        if not isinstance(entrada, int):
+            raise TypeError("No es un número entero")
+        if entrada < 0:
+            raise ValueError("No es un número entero positivo")
+        salida = func(entrada)
+        return salida
+    return wrapper
+
+
+# # Debajo haremos una función más pequeña
+# def filtro_7(numero_primo):
+#     if numero_primo % 10 != 7:
+#         return True
+#     # if str(numero_primo[-1]) == "7": # Esta sería otra opción
+#     #     return False
+#     else:
+#         return False
+
+
+
+# # Haremos una función lambda con la siguiente función
+# # Si consiguimos hacer una función que se ejecute en unaúnica linea
+# # significa que podemos hacer una función lambda
+# def filtro_7(num):
+#     return num % 10 != 7
+
+
+
+# def filtrar_salida(func):
+#     def wrapper(limite):
+#         salida = func(limite)
+#         salida = list(filter(filtro_7, salida))
+#         return salida
+#     return wrapper
+
+
+def filtrar_salida(func):
+    def wrapper(limite):
+        salida = func(limite)
+        salida = list(filter(lambda num: num % 10 != 7, salida))
+        return salida
+    return wrapper
+
+
+# Es recomendable generar los máximos decoradores posibles que dibidan las distinta
+@filtrar_salida
+@verificar_entrada
+def lista_primos(limite):
+    lista_primos = []
+    for i in range(2, limite):
+        if es_primo(i):
+            lista_primos.append(i)
+    return lista_primos
+
+lista_primos("100")
+
 #Ejercicio 3: Decorador para Logs
 
 """
@@ -154,104 +230,75 @@ log(2)
 
 
 
+# PROFE 
+
+import time
+from datetime import datetime
 
 
+def es_primo(numero):
+    es_primo = True
+    factor = 2
+    
+    # Buscamos factores menores que el número
+    while factor <= int(numero**0.5):
+        if numero % factor == 0:
+            # Al encontrar el factor no es primo y paramos
+            es_primo = False
+            # print(factor)
+            break
+        factor += 1
+        
+    return es_primo
 
 
+# def registro(func):
+#     def wrapper(*args, **kwargs):
+#         inicio = time.time()
+#         resultado = func(*args,**kwargs)
+#         final = time.time()
+#         hora_actual = datetime.now()
+#         info = f"""---------------------------------------------------------------
+# Registro: {hora_actual}
+# Función: {func.__name__}()
+# Tiempo de ejecución: {final - inicio} segundos
+# Argumentos posicionales : {args},
+# Argumentos por clave {kwargs}
+# Resultado: {resultado}\n
+# """
+#         with open("teoria/datos/registro.text", "a") as archivo:
+#                   archivo.write(info)
+#         print(info)
+#         return resultado
+#     return wrapper
 
 def registro(func):
-    def funcion_medida():
+    def wrapper(*args, **kwargs):
         inicio = time.time()
-        salida = func() # Aquí activamos en la función
+        resultado = func(*args,**kwargs)
         final = time.time()
-        print(f"Tiempo de ejecución de la función \"{func.__name__}()\" es de {final - inicio} segundos")
-        return salida
-    return funcion_medida
+        hora_actual = datetime.now()
+        # Crear el encabezado:
+        # if archivo no existe crear encabezado: Time\tFuncion\tTiempoDeEjecucion\tArgumentosPosicionales\tArgumentosClave\tResultado
+        info = f"{hora_actual}\tFunción: {func.__name__}()\tTiempo de ejecución: {final - inicio} segundos\tArgumentos posicionales : {args}\tArgumentos por clave {kwargs}\tResultado: {resultado}\n"
+        with open("teoria/datos/registro.text", "a") as archivo:
+                  archivo.write(info)
+        print(info)
+        return resultado
+    return wrapper
 
 
 
+@filtrar_salida
+@verificar_entrada
 @registro
-def log():
-    time.sleep(1)
-    return "terminé"
+def lista_primos(limite):
+    lista_primos = []
+    time.sleep(2)
+    for i in range(2, limite):
+        if es_primo(i):
+            lista_primos.append(i)
+    return lista_primos
 
-log()
+lista_primos(100)
 
-
-def registro_hora_actual(func):
-    def funcion_medida():
-        inicio = time.time()
-        salida = func() # Aquí activamos en la función
-        final = time.time()
-        print(f"Tiempo de ejecución de la función \"{func.__name__}()\" es de {final - inicio} segundos")
-        return salida
-    return funcion_medida
-
-
-
-
-
-def medir_tiempo(func):
-    def funcion_medida():
-        inicio = time.time()
-        salida = func() # Aquí activamos en la función
-        final = time.time()
-        print(f"Tiempo de ejecución de la función {func.__name__}, {final - inicio} segundos")
-        return salida
-    return funcion_medida
-
-
-@medir_tiempo
-def ejemplo():
-    time.sleep(1)
-    return "terminé"
-
-ejemplo()
-
-
-def medir_tiempo(func):
-    def funcion_medida(mensaje):
-        mensaje = mensaje.replace("Hola", "Adiós")
-        inicio = time.time()
-        salida = func(mensaje)
-        final = time.time()
-        print(f"Tiempo de ejecución de la función {func.__name__}, {final - inicio} segundos")
-        salida = salida.upper()
-        return salida
-    return funcion_medida
-
-
-@medir_tiempo
-def ejemplo2(mensaje):
-    print(mensaje)
-    salida = "Terminé"
-    return salida
-    
-ejemplo2("Hola Mundo")
-
-
-def medir_tiempo(func):
-    def funcion_medida(**mensaje):
-        inicio = time.time()
-        for elemento in mensaje:
-            print(elemento)
-        salida = func(**mensaje)
-        final = time.time()
-        print(f"Tiempo de ejecución de la función {func.__name__}, {final - inicio} segundos")
-        return salida
-    return funcion_medida
-
-@medir_tiempo
-def ejemplo(m1, m2, m3):
-    time.sleep(1)
-    return m2
-
-ejemplo(m1 = "Hola", m2 = "Adios", m3 = "Hasta Luego")
-
-@medir_tiempo
-def ejemplo3(mensaje):
-    time.sleep(3)
-    return mensaje
-
-ejemplo3("Hola que tal")
-ejemplo3("Hola como estás")
