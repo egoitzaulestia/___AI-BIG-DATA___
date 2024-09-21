@@ -3,9 +3,8 @@
 """
 Created on Wed Sep 18 10:20:40 2024
 
-@author: laptop
+@author: Egoitz Aulestia Padilla
 """
-
 
 
 #Ejercicio 1: Decorador de Validación de Parámetros
@@ -17,9 +16,10 @@ Por ejemplo, puedes implementar una validación que asegure que los números ing
 """
 
 
-
 def validar_parametros(func):
     def validacion(x):
+        # if not x.isdigit():
+        #     return "Debes introducir un número"
         if x < 0:
             return "El número es negativo"
         else:
@@ -30,7 +30,7 @@ def validar_parametros(func):
 def num_entero(x):
     return x    
 
-num_entero(-73)
+num_entero(73)
 
 
 
@@ -172,6 +172,8 @@ def lista_primos(limite):
     return lista_primos
 
 lista_primos("100")
+
+
 
 #Ejercicio 3: Decorador para Logs
 

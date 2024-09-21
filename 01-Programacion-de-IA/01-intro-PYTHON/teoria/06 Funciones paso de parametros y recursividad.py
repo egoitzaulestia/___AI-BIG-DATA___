@@ -55,6 +55,12 @@ doblar_valores(numeros)
 print("El valor de 'numeros' fuera de la función es", numeros)
 
 
+num_ls_1 = [2, 4, 6]
+num_ls_2 = [10, 20, 30]
+
+num_ls_mix = [a * b for a, b in zip(num_ls_1, num_ls_2)]
+
+
 # ___________________________
 # ¿Si necesito lo contrario?
 # ___________________________
