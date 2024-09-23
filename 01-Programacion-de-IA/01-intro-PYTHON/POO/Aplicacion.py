@@ -117,13 +117,23 @@ class Empleado:
         pago_total = round(((self.__sueldo_hora * tiempo_transcurrido.total_seconds()) / 3600), 2)
         return pago_total
 
+    @property
+    def sueldo_hora(self):
+        if input("Escribe password: ") == "1234":
+            return self.__sueldo_hora
+        else:
+            return "No te doy la información"
+        
+    @sueldo_hora.setter
+    def sueldo_hora(self, nuevo_sueldo_hora):
+        self.__sueldo_hora = nuevo_sueldo_hora 
 
 
 
 class Directivo(Empleado):
     def __init__(self, nombre, apellidos, dni):
         super().__init__(nombre, apellidos, dni)
-        self.__sueldo_hora    = 80
+        self.sueldo_hora    = 80
         self.coche_empresa  = True
         self.reunido        = False
         
@@ -133,9 +143,10 @@ class Directivo(Empleado):
     def salir_de_reunion(self):
         self.reunido = False
         
-    def get_sueldo(self):
-        return self.__sueldo_hora
-    
+
+
+directivo_1 = Directivo("Mac", "Davilson Suer", "36345676H")
+directivo_1.sueldo_hora
 
 
 def calcular_letra_dni(num_dni):
@@ -146,7 +157,7 @@ directivo_1 = Directivo("Mac", "Davilson Suer", "36345676H")
 
 print(directivo_1)
 
-directivo_1.__sueldo_hora
+directivo_1.sueldo
 
 directivo_1.get_sueldo()
 
