@@ -230,5 +230,5 @@ issubclass(Animal_domestico, Mamifero)
 
 # El directivo, tiene coche de empresa, y métodos asociados a él.
 # El oficinista tiene bonuses
-# El peón tiene guardias... etc
+# El peón tiene guardias... etc # El único que trabajará por la noche
 

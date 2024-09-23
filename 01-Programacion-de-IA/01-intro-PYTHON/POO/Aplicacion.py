@@ -40,26 +40,40 @@ telefono
 
 """
 
+import time
 from datetime import datetime, timedelta
 
 
-class Persona:
+class Empleado:
     def __init__(self, nombre, apellidos, dni):
-        self.nombre     = nombre.title() # title() capitaliza las distintas palabras 
-        self.apellidos  = apellidos.title() # title() capitaliza las distintas palabras 
-        # self.dni      = verifica_dni(dni)
-        self.dni        = dni
-        self.cargo      = ""
-        self.telefono   = ""
-        self.direccion  = ""
-        self.ubicacion  = ""
-        self.fichajes   = []
-        self.sueldo_hora     = 20
+        self.nombre       = nombre.title() # title() capitaliza las distintas palabras 
+        self.apellidos    = apellidos.title() # title() capitaliza las distintas palabras 
+        if self.verifica_dni(dni):
+            self.dni = dni
+        else:
+            raise ValueError("DNI inválido")
+        # self.dni          = dni
+        self.cargo        = ""
+        self.telefono     = ""
+        self.direccion    = ""
+        self.ubicacion    = ""
+        self.fichajes     = []
+        self.sueldo_hora  = 20
         
         
+    @staticmethod   
+    def verifica_dni(dni):
+        """Comprovación de la letra del DNI"""
+        digito_control = "TRWAGMYFPDXBNJZSQVHLCKE"
+        dni_num = int(dni[:-1])
+        dni_letra = dni[-1]
+        return dni_letra == digito_control[dni_num % 23]
+
+    # def __str__(self):
+    #     return f"{self.nombre} {self.apellidos}{' es ' + self.cargo if self.cargo else ''}"
 
     def __str__(self):
-        return f"{self.nombre} {self.apellidos}{' es ' + self.cargo if self.cargo else ''}"
+        return f"{self.nombre} {self.apellidos} {self.__class__.__name__}"
 
         
     def __del__(self):
@@ -74,17 +88,6 @@ class Persona:
         self.fichajes.append(datetime.now())
         print("Bip, bip...")
         
-    # def calcular_tiempo_trabajo(self):
-    #     for turno in self.fichajes:
-    #         if turno % 2 == 0:
-    #             inicio = self.fichajes
-    #         else:
-    #             final = self.fichajes
-                
-    #         horas_trabajadas = final - inicio 
-            
-    #         horas_trabajadas += horas_trabajadas
-
     def calcula_tiempo(self):
         # fichajes = self.fichajes
         entradas = self.fichajes[0::2]
@@ -99,6 +102,125 @@ class Persona:
         return pago_total
 
 
+#############
+# Ejercicio #
+#___________#
+# Crear la clase empleado
+# y a partir de ella crear clases herederas según cargo.
+
+
+# Las clases "hijo" serán Directivo, Oficinista, Peon
+
+# El directivo, tiene coche de empresa, y métodos asociados a él.
+# El oficinista tiene bonuses
+# El peón tiene guardias... etc # El único que trabajará por la noche
+
+
+
+class Directivo(Empleado):
+    def __init__(self, nombre, apellidos, dni):
+        super().__init__(nombre, apellidos, dni)
+        self.sueldo_hora    = 80
+        self.coche_empresa  = True
+        self.reunido        = False
+        
+    def entrar_en_reunion(self):
+        self.reunido = True
+    
+    def salir_de_reunion(self):
+        self.reunido = False
+    
+
+
+def calcular_letra_dni(num_dni):
+    return "TRWAGMYFPDXBNJZSQVHLCKE"[num_dni%23]
+    
+calcular_letra_dni(36345676)
+directivo_1 = Directivo("Mac", "Davilson Suer", "36345676H")
+
+print(directivo_1)
+
+directivo_1.reunido
+directivo_1.entrar_en_reunion()
+directivo_1.reunido
+
+directivo_1.fichar()
+time.sleep(3)
+directivo_1.fichar()
+directivo_1.calcula_sueldo()
+
+
+
+    
+class Oficinista(Empleado):
+    def __init__(self, nombre, apellidos, dni):
+        super().__init__(nombre, apellidos, dni)
+        self.sueldo_hora = 40
+        self.bonus = 0
+        
+    def extra_bonus(self, cantidad):
+        self.bonus += cantidad 
+    
+    # def calcula_sueldo(self):
+    #     tiempo_transcurrido = self.calcula_tiempo()
+    #     pago_total = round(((self.sueldo_hora * tiempo_transcurrido.total_seconds()) / 3600), 2)
+    #     return pago_total
+    
+    def calcula_sueldo(self): 
+        pago_total = super().calcula_sueldo() # Polimorfismo: Heredamos método del padre, y lo modificamos
+        pago_total += self.bonus 
+        return pago_total
+    
+    
+oficinista_1 = Oficinista("Alaitz", "Guirador Padil", "44556677N")
+oficinista_1.extra_bonus(500)
+
+oficinista_1.bonus
+
+print(oficinista_1)
+
+oficinista_1.fichar()
+time.sleep(4)
+time.sleep(4)
+
+oficinista_1.fichar()
+
+# oficinista_1.cobrar()
+oficinista_1.calcula_sueldo()
+oficinista_1.calcula_tiempo()
+
+
+timedelta(seconds=12)
+
+
+class Peon(Empleado):
+    def __init__(self, nombre, apellidos, dni):
+        super().__init__(nombre, apellidos, dni)
+        self.guardias = 1
+    
+        
+    def calcula_sueldo(self): 
+        pago_guardias = self.guardias * 10
+        pago_total = super().calcula_sueldo() # Polimorfismo: Heredamos método del padre, y lo modificamos
+        pago_total += pago_guardias
+        return pago_total
+
+
+peon_1 = Peon("Unai", "Meri Azak", "23664789C")
+
+
+peon_1.fichar()
+time.sleep(4)
+time.sleep(4)
+peon_1.fichar()
+
+peon_1.calcula_sueldo()
+
+
+
+class Coche:
+    def __init__(self):
+        pass
 
 
 

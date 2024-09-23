@@ -5,14 +5,27 @@ Created on Fri Sep 20 12:56:35 2024
 @author: 2425BIGDATA401
 """
 
+import time
 from datetime import timedelta
-from Aplicacion import Persona, Direccion
+from POO.Aplicacion import Empleado, Direccion
 
-empleado_1 = Persona("Egoitz", "Aulestia Padilla", "12345678N")
-
-lista_horas_trabajadas = []
+empleado_1 = Empleado("Egoitz", "Aulestia Padilla", "12345678N")
 
 empleado_1.fichar()
+time.sleep(120)
+empleado_1.fichar()
+
+empleado_1.calcula_sueldo()
+
+
+
+
+
+
+
+
+
+
 
 fichajes = empleado_1.fichajes
 
