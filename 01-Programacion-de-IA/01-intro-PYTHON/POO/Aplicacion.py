@@ -2,8 +2,22 @@
 """
 Created on Fri Sep 20 08:51:19 2024
 
-@author: 2425BIGDATA401
+@author: Egoitz Aulestia Padilla
 """
+
+#############
+# Ejercicio #
+#___________#
+# Crear la clase empleado
+# y a partir de ella crear clases herederas según cargo.
+
+
+# Las clases "hijo" serán Directivo, Oficinista, Peon
+
+# El directivo, tiene coche de empresa, y métodos asociados a él.
+# El oficinista tiene bonuses
+# El peón tiene guardias... etc # El único que trabajará por la noche
+
 
 
 """
@@ -40,6 +54,8 @@ telefono
 
 """
 
+
+
 import time
 from datetime import datetime, timedelta
 
@@ -58,7 +74,7 @@ class Empleado:
         self.direccion    = ""
         self.ubicacion    = ""
         self.fichajes     = []
-        self.sueldo_hora  = 20
+        self.__sueldo_hora  = 20
         
         
     @staticmethod   
@@ -88,7 +104,7 @@ class Empleado:
         self.fichajes.append(datetime.now())
         print("Bip, bip...")
         
-    def calcula_tiempo(self):
+    def __calcula_tiempo(self):
         # fichajes = self.fichajes
         entradas = self.fichajes[0::2]
         salidas = self.fichajes[1::2]
@@ -97,30 +113,17 @@ class Empleado:
         return tiempo_transcurrido
 
     def calcula_sueldo(self):
-        tiempo_transcurrido = self.calcula_tiempo()
-        pago_total = round(((self.sueldo_hora * tiempo_transcurrido.total_seconds()) / 3600), 2)
+        tiempo_transcurrido = self.__calcula_tiempo()
+        pago_total = round(((self.__sueldo_hora * tiempo_transcurrido.total_seconds()) / 3600), 2)
         return pago_total
 
-
-#############
-# Ejercicio #
-#___________#
-# Crear la clase empleado
-# y a partir de ella crear clases herederas según cargo.
-
-
-# Las clases "hijo" serán Directivo, Oficinista, Peon
-
-# El directivo, tiene coche de empresa, y métodos asociados a él.
-# El oficinista tiene bonuses
-# El peón tiene guardias... etc # El único que trabajará por la noche
 
 
 
 class Directivo(Empleado):
     def __init__(self, nombre, apellidos, dni):
         super().__init__(nombre, apellidos, dni)
-        self.sueldo_hora    = 80
+        self.__sueldo_hora    = 80
         self.coche_empresa  = True
         self.reunido        = False
         
@@ -129,16 +132,23 @@ class Directivo(Empleado):
     
     def salir_de_reunion(self):
         self.reunido = False
+        
+    def get_sueldo(self):
+        return self.__sueldo_hora
     
 
 
 def calcular_letra_dni(num_dni):
     return "TRWAGMYFPDXBNJZSQVHLCKE"[num_dni%23]
     
-calcular_letra_dni(36345676)
+calcular_letra_dni(44556677)
 directivo_1 = Directivo("Mac", "Davilson Suer", "36345676H")
 
 print(directivo_1)
+
+directivo_1.__sueldo_hora
+
+directivo_1.get_sueldo()
 
 directivo_1.reunido
 directivo_1.entrar_en_reunion()
@@ -155,9 +165,11 @@ directivo_1.calcula_sueldo()
 class Oficinista(Empleado):
     def __init__(self, nombre, apellidos, dni):
         super().__init__(nombre, apellidos, dni)
-        self.sueldo_hora = 40
+        self.__sueldo_hora = 40
         self.bonus = 0
         
+    # IMPORTANTE - > encapsular extra_bonus
+    # Crear setter y getter
     def extra_bonus(self, cantidad):
         self.bonus += cantidad 
     
@@ -171,8 +183,10 @@ class Oficinista(Empleado):
         pago_total += self.bonus 
         return pago_total
     
+    def __str__(self):
+        return f"{super().__str__()}, tiene {self.bonus}€ de bonus acumulado"
     
-oficinista_1 = Oficinista("Alaitz", "Guirador Padil", "44556677N")
+oficinista_1 = Oficinista("Alaitz", "Guirador Padil", "44556677L")
 oficinista_1.extra_bonus(500)
 
 oficinista_1.bonus
@@ -193,11 +207,16 @@ oficinista_1.calcula_tiempo()
 timedelta(seconds=12)
 
 
+
+# El empleado teiene un sueldo_hora = 20, heredado de Empleado
 class Peon(Empleado):
     def __init__(self, nombre, apellidos, dni):
         super().__init__(nombre, apellidos, dni)
-        self.guardias = 1
+        self.guardias = 0
     
+    def ingresar_horas_guardia(self):
+        horas_guardia = int(input("Introduce horas de guardia: "))
+        self.guardias += horas_guardia
         
     def calcula_sueldo(self): 
         pago_guardias = self.guardias * 10
@@ -205,9 +224,12 @@ class Peon(Empleado):
         pago_total += pago_guardias
         return pago_total
 
+    def __str__(self):
+        return f"{super().__str__()}, tiene {self.guardias} horas de guardia equivalente a {self.guardias * 10}€"
 
 peon_1 = Peon("Unai", "Meri Azak", "23664789C")
 
+print(peon_1)
 
 peon_1.fichar()
 time.sleep(4)
@@ -216,6 +238,7 @@ peon_1.fichar()
 
 peon_1.calcula_sueldo()
 
+peon_1.ingresar_horas_guardia()
 
 
 class Coche:
