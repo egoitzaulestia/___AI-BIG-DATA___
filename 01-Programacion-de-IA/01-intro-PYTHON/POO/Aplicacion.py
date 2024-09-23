@@ -54,7 +54,7 @@ class Persona:
         self.direccion  = ""
         self.ubicacion  = ""
         self.fichajes   = []
-        self.sueldo     = 20
+        self.sueldo_hora     = 20
         
         
 
@@ -92,6 +92,13 @@ class Persona:
         tiempo_jornadas = [s - e for s, e in zip(salidas, entradas)]
         tiempo_transcurrido = sum(tiempo_jornadas, start=timedelta(0))
         return tiempo_transcurrido
+
+    def calcula_sueldo(self):
+        tiempo_transcurrido = self.calcula_tiempo()
+        pago_total = round(((self.sueldo_hora * tiempo_transcurrido.total_seconds()) / 3600), 2)
+        return pago_total
+
+
 
 
 
