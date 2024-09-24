@@ -59,6 +59,7 @@ telefono
 import time
 from datetime import datetime, timedelta
 
+from abc import ABC, abstractmethod
 
 class Empleado:
     def __init__(self, nombre, apellidos, dni):
@@ -113,6 +114,12 @@ class Empleado:
         tiempo_transcurrido = sum(tiempo_jornadas, start=timedelta(0))
         return tiempo_transcurrido
 
+    # def calcula_sueldo(self):
+    #     tiempo_transcurrido = self.__calcula_tiempo()
+    #     pago_total = round(((self.__sueldo_hora * tiempo_transcurrido.total_seconds()) / 3600), 2)
+    #     return pago_total
+    
+    @abstractmethod
     def calcula_sueldo(self):
         tiempo_transcurrido = self.__calcula_tiempo()
         pago_total = round(((self.__sueldo_hora * tiempo_transcurrido.total_seconds()) / 3600), 2)
