@@ -104,6 +104,7 @@ class Empleado:
         self.fichajes.append(datetime.now())
         print("Bip, bip...")
         
+    # Método encapsulado
     def __calcula_tiempo(self):
         # fichajes = self.fichajes
         entradas = self.fichajes[0::2]
