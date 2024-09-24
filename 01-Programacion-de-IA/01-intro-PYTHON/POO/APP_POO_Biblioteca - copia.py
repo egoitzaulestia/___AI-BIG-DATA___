@@ -21,12 +21,12 @@ class Biblioteca():
     pass
 
 # class Object(ABC)
-class Objeto(ABC):
+class Objeto():
     def __init__(self, identificador, titulo, anio, genero, seccion):
         self.identificador            = identificador
         self.titulo                   = titulo
         self.anio                     = anio
-        self.__disponibilidad         = False  # Puede ser bool o available/not available
+        self.__disponibilidad         = True  # Puede ser bool o available/not available
         # self.fecha_publicacion = fecha_publicacion 
         self.tipo                     = self.__class__.__name__  # Tipo de objeto: libro, dvd, revista, etc.
         self.genero                   = genero  # género del objeto (categoría)
@@ -39,24 +39,30 @@ class Objeto(ABC):
         self.precio_alquiler          = 0
         self.estado_objeto            = False
 
-    
-    def pedir_password(func):
-        def wrapper(self):
-            if input("Escribe password: ") == "1234":
-                return func(self)  # Aquí debes devolver el valor para que funcione el getter
-            else:
-                return "No te doy la información"
-        return wrapper
-    
+        
     def __str__(self):
         # Cambiado a self.anio ya que self.fecha_publicacion no está definido
         return f"Título: {self.titulo}\nFecha Publicación: {self.anio}\nTipo de Objeto: {self.__class__.__name__}"
 
-    @abstractmethod
     def mostrar_info_detallada(self):
         pass
-
-
+    
+    
+    def habilitar_objeto(self):
+        if input("Escribe password: ") == "1234":
+            self.__disponibilidad = True
+        else:
+            print("La clave no es correcta.")
+    
+    def desablitar_objeto(self):
+        if input("Escribe password: ") == "1234":
+            self.__disponibilidad = False
+        else:
+            print("La clave no es correcta.")
+    
+    # def actualizar_info(self, nuevos_datos):
+    #     pass
+    
     def verificar_disponibilidad(self):
         return self.__disponibilidad
     
@@ -69,7 +75,6 @@ class Objeto(ABC):
     def comprar(self, unidades, precio):
         self.__copias += unidades
         self.__balance -= precio
-        self.__disponibilidad = True
     
     
     def alquilar_objeto(self):
@@ -110,26 +115,14 @@ class Objeto(ABC):
     def reparar_objeto(self):
         self.estado_objeto = False
         print(f"El/La {self.__class__.__name__} {self.titulo} ha sido reparado.")
-
     
-    @pedir_password   
-    def habilitar_objeto(self):
-        self.__disponibilidad = True
-
-    
-    @pedir_password    
-    def desablitar_objeto(self):
-        self.__disponibilidad = False    
-    
-    @property
-    @pedir_password    
-    def disponibilidad(self):
-        return self.__disponibilidad
-    
-    @disponibilidad.setter
-    @pedir_password    
-    def disponibilidad(self, estado_disponible):
-        self.__disponibilidad = estado_disponible
+    def pedir_password(func):
+        def wrapper(self):
+            if input("Escribe password: ") == "1234":
+                return func(self)  # Aquí debes devolver el valor para que funcione el getter
+            else:
+                return "No te doy la información"
+        return wrapper
 
     @property
     @pedir_password    
@@ -214,7 +207,11 @@ class Libro(Objeto):
     def es_autor_conocido(self, autor_famoso):
         return self.autor == autor_famoso
 
-
+    def desablitar_objeto(self):
+        if input("Escribe password: ") == "1234":
+            self.__disponibilidad = False
+        else:
+            print("La clave no es correcta.")
                 
 # if __name__ == "__main__":
  
@@ -227,9 +224,6 @@ libro_1.alquilar_objeto()
 libro_1.devolver_objeto(True)
 libro_1.balance
 
-libro_1.disponibilidad
-libro_1.disponibilidad = False
-libro_1.disponibilidad
 
 libro_1.disponibilidad
 libro_1.tipo
