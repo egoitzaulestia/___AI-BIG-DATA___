@@ -119,6 +119,7 @@ class Empleado:
     #     pago_total = round(((self.__sueldo_hora * tiempo_transcurrido.total_seconds()) / 3600), 2)
     #     return pago_total
     
+    # Esto es un método de ab
     @abstractmethod
     def calcula_sueldo(self):
         tiempo_transcurrido = self.__calcula_tiempo()
