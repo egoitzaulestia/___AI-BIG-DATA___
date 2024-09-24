@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['teoria/11-Funciones decoradoras.py', 'z_PROFESOR/11-Funciones_decoradoras_PROFE.py', 'ejercicios/11-Funciones decoradoras_ejercicios (Planteamiento).py', 'teoria/09-Excepciones.py', 'teoria/10-Funciones lambda, map y filter.py', 'teoria/05 Funciones.py']
+recent_files = ['POO\\Aplicacion.py', 'POO\\Uso_Aplicacion.py', 'POO\\04 POO Herencia.py', 'POO\\06 POO Encapsulamiento.py', 'POO\\05 POO Polimorfismo.py']
 
 [main]
 version = 0.2.0

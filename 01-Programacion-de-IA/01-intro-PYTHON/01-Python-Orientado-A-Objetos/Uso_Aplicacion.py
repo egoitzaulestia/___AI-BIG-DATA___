@@ -6,7 +6,7 @@ Created on Fri Sep 20 12:56:35 2024
 """
 
 from datetime import timedelta
-from Aplicacion import Persona, Direccion
+from 01-Python-Orientado-A-ObjetosAplicacion import Persona, Direccion
 
 empleado_1 = Persona("Egoitz", "Aulestia Padilla", "12345678N")
 
