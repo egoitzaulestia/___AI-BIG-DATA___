@@ -117,6 +117,7 @@ class Empleado:
         pago_total = round(((self.__sueldo_hora * tiempo_transcurrido.total_seconds()) / 3600), 2)
         return pago_total
 
+    # Metodo getter
     @property
     def sueldo_hora(self):
         if input("Escribe password: ") == "1234":
@@ -124,6 +125,7 @@ class Empleado:
         else:
             return "No te doy la información"
         
+     # Metodo setter
     @sueldo_hora.setter
     def sueldo_hora(self, nuevo_sueldo_hora):
         self.__sueldo_hora = nuevo_sueldo_hora 
