@@ -11,6 +11,9 @@ SalePrice3 = read.csv("SalePrice3.csv", sep= ",", stringsAsFactors = TRUE)
 
 SalePriceAll = cbind(SalePrice1, SalePrice2, SalePrice3)
 
+# Eleiminamos variables repetidas
+SalePriceAllFinal = SalePriceAll[!duplicated(lapply(SalePriceAll, summary))] # Le ponemos la exclamación para cambiar el orden y quedarnos con los TRUE
+
 
 # 3. Cargar los datos de “CasasCaras”.
 
@@ -20,11 +23,7 @@ CasasCaras = read.csv("CasasCaras.csv", stringsAsFactors = TRUE)
 # 4. Enriquecer la tabla “CasasCaras” con las variables incluidas en datos1, datos2 y
 # datos3, utilizando dos fórmulas diferentes.
 
-SalePriceAllFinal = SalePriceAll[!duplicated(lapply(SalePriceAll, summary))] # Le ponemos la exclamación para cambiar el orden y quedarnos con los TRUE
-
-
-
-# Opción 1 :: MERGE
+# Opción 1 de enriquecimiento: MERGE
 
 CasasCarasEnriquecidos_1 = merge(CasasCaras, SalePriceAllFinal, by= "Id", all.x=TRUE ,all.y=FALSE)
 
@@ -33,7 +32,7 @@ CasasCarasEnriquecidos_1 = merge(CasasCaras, SalePriceAllFinal, by= "Id", all.x=
 # CasasCarasEnriquecidos_1C = merge(CasasCarasEnriquecidos_1B, SalePrice3, all.x=TRUE, all.y=FALSE)
 
 
-# Opción 2 :: JOIN
+# Opción 2 de enriquecimiento: JOIN
 library(plyr)
 library(dplyr)
 
@@ -61,8 +60,10 @@ datosH = read.csv("datosH.csv", sep= ",", stringsAsFactors = TRUE)
 #    a. Enriquecer datos H con la información de “SalePrice1”, “SalePrice2”,
 #       “SalePrice3”.
 
+# Opción 1
 datosHEnriquecidos_1 = merge(datosH, SalePriceAllFinal, by= "Id", all.x=TRUE ,all.y=FALSE)
 
+# Opción 2
 datosHEnriquecidos_1A = merge(datosH, SalePrice1, all.x=TRUE ,all.y=FALSE)
 datosHEnriquecidos_1B = merge(datosHEnriquecidos_1A, SalePrice2, all.x=TRUE, all.y=FALSE)
 datosHEnriquecidos_1C = merge(datosHEnriquecidos_1B, SalePrice3, all.x=TRUE, all.y=FALSE)
@@ -70,8 +71,10 @@ datosHEnriquecidos_1C = merge(datosHEnriquecidos_1B, SalePrice3, all.x=TRUE, all
 
 #    b. Recogiendo toda la información recogida en todas las tablas
 
+# Opción 1
 datosHEnriquecidos_2 = merge(datosH, SalePriceAllFinal, by= "Id", all.x=TRUE ,all.y=TRUE)
 
+# Opción 2
 datosHEnriquecidos_2A = merge(datosH, SalePrice1, by="Id", all.x=TRUE ,all.y=TRUE)
 datosHEnriquecidos_2B = merge(datosHEnriquecidos_2A, SalePrice2, by="Id", all.x=TRUE ,all.y=TRUE)
 datosHEnriquecidos_2C = merge(datosHEnriquecidos_2B, SalePrice3, by="Id", all.x=TRUE ,all.y=TRUE)
@@ -95,9 +98,10 @@ datosHEnriquecidosConCasasCaras = merge(datosH, CasasCaras, by="Id", all.x = TRU
 
 #    c. Enriquecer Casascaras con datos H.
 
-CasasCarasEnriquecidosConDatosH = merge(CasasCaras, datosH, by="Id", all.x = FALSE, all.y=TRUE)
+CasasCarasEnriquecidosConDatosH = merge(CasasCaras, datosH, by="Id", all.x = TRUE, all.y=FALSE)
 
 
 #    d. Todos los elementos.
 
 datosFinalEnriquecidos = merge(datosH, CasasCaras, by="Id", all.x = TRUE, all.y=TRUE)
+
