@@ -16,8 +16,9 @@ MSZoning_RM = df[df$MSZoning == "RM",]
 
 MSZoning_RM_o_C = df[df$MSZoning=="RM" | df$MSZoning=="C",]
 
+# Otra opción de filtrado
 RM_o_C = df$MSZoning=="RM" | df$MSZoning=="C"
-MSZoning_RM_o_Cdf[RM_o_C,]
+MSZoning_RM_o_C2 = df[RM_o_C,]
 
 
 # 4. Seleccionar los datos en los que el precio de venta sea menor de 100.000$
@@ -39,29 +40,27 @@ precio_menor_cienMil_y_MSZZoning_RM = df[df$SalePrice < 100000 & df$MSZoning=="R
 
 # 7. Seleccionar los datos de la variable “MSZoning” que no tomen el valor“RL”.
 
-MSZoning_RL = df[df$MSZoning=="RL",]
+MSZoning_RL = df[df$MSZoning !="RL",]
 
 
 # 8. Seleccionar los datos de la variable “MSZoning” que no tomen el valor “RL” y valgan 
 #    menos de 120.000 dolares.
 
-MSZoning_RL = df[df$MSZoning=="RL" & df$SalePrice < 120000,]
+MSZoning_RL = df[df$MSZoning !="RL" & df$SalePrice < 120000,]
 
 # 9. Seleccionar las variables que sean factores.
 
 sapply(df,class)
 
 # Seleccionamos los factores.
-Factores=df[,sapply(df,is.factor), drop = F] # drop igual a FALSE nos mantiene SIEMPRE en DataFrame
+Factores = df[ ,sapply(df,is.factor), drop = FALSE] # drop igual a FALSE nos mantiene SIEMPRE en DataFrame
 
 
 # 10. Eliminar aquellas variables que tomen solo un valor.
 
-criterio = sapply(df,2,function(x) length(unique(na.omit(x)))) > 1
+criterio = apply(df,2, function(x) length(unique(na.omit(x))) > 1)
 seleccion = df[,criterio]
 
-criterio = sapply(df, function(x) length(unique(na.omit(x))) > 1)
-seleccion = df[, criterio]
 
 # 11. Eliminar los duplicados.
 
@@ -69,12 +68,20 @@ rep = duplicated(Factores, incomparables = FALSE)
 # rep = as.data.frame(rep)
 table(rep)
 datosNuevos = Factores[!rep,]
-datosRepetidos = Factores[rep,]
+# datosRepetidos = Factores[rep,]
 
 
 # 12. De los datos seleccionar las variables que aparecen en datosImp.
 
+df1 <- read.csv("datosImp.csv",header = TRUE,sep = ",", stringsAsFactors = T)
+
+filtrado_datosImp = df[colnames(df) %in% colnames(df1)]
 
 
 
 # 13. De los datos seleccionar aquellos que aparecen en casas caras.
+
+df2 <- read.csv("CasasCaras.csv",header = TRUE,sep = ",", stringsAsFactors = T)
+
+filtrado_casas_caras = df[df$Id %in% df2$Id, ]
+
