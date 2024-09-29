@@ -516,6 +516,7 @@ print(coche_1)
 # if coche1 > coche2:
 #   pass
 
+coche_1.__len__
 
 coche_1.__eq__(coche_2)
 

@@ -4,31 +4,17 @@
 Created on Sat Sep 28 16:21:29 2024
 
 @author: egoitzaulestiapadilla
-
-————————————————————————————————————————————————————————————————
-
-PROYECTO:
-    
-Programa para la gestión de objetos de un sitema de bilblioteca 
-mediante el paradigma de programación orientada a objetos (POO)
-
-REQUISITOS:
-Utilizar los cutro conceptos POO:
-    - Herencia
-    - Polimorfismo
-    - Encapsulamiento
-    - Abstracción
-
 """
 
 
-from clases.clases import Libro, DVD, Revista
+
+from POO.APP_POO_Biblioteca import Libro, DVD, Revista
 
 
 
 if __name__ == "__main__":
     
-    libro_1 = Libro(2314, "La historia interminable", "Michael Ende", 420, 2023, "Español", "Alfaguara", "Novela Fantástica", "libros")
+    libro_1 = Libro(2314, "Titanes", "Miguel Vartus", 345, 2023, "Español", "boomers", "Novela Fantástica", "libros")
     libro_2 = Libro(1542, "Guns", "Rails McTorth", 260, 2023, "Inglés", "North's word", "Novela Policíaca", "libros")
     
     libro_1.obtener_paginas()
@@ -44,11 +30,7 @@ if __name__ == "__main__":
     
 
     libro_1.alquilar_objeto()
-    libro_1.disponibilidad  # Password: 1234
-
     libro_1.comprar(3, 5)
-    libro_1.balance  # Password: 1234
-
     
     libro_1.disponibilidad  # Password: 1234
 
@@ -88,14 +70,13 @@ if __name__ == "__main__":
     dvd_2.consultar_subtitulos()    
     
     dvd_1.comprar(5, 15)
-    dvd_1.balance
     dvd_1.alquilar_objeto()
     libro_1.devolver_objeto(True)  # True si el objeto está en buenas conciones
     dvd_1.balance
 
 
     revista_1 = Revista(3452, "AI Future", 2, "Machines World", 106, "Inteligencia Artificial", "Bimensual", 2024, "Inglés", "Septiembre", "Tecnología", "revistas")
-    revista_2 = Revista(2345, "MangaWorld", 45, "Isiru Haito", 106, "Cyberpunk", "Trimestral", 2023, "Español", "Abril", "Manga", "revistas")
+    revista_2 = Revista(2345, "Otakumataku", 45, "Isiru Haito", 106, "Otakus", "Trimestral", 2023, "Español", "Abril", "Manga", "revistas")
 
     print(revista_1)
     revista_1.mostrar_info_detallada()
@@ -104,4 +85,3 @@ if __name__ == "__main__":
     revista_2.mostrar_info_detallada()
     
     revista_1.obtener_tema()
-    revista_2.obtener_tema()

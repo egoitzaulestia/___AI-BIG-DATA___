@@ -1,21 +1,16 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Sep 24 09:14:18 2024
+Created on Sat Sep 28 16:21:29 2024
 
-@author: Egoitz Aulestia Padilla
-"""
-
-"""
-Sistema de biblioteca de gestión de recursos de biblioteca basado en POO
+@author: egoitzaulestiapadilla
 """
 
 
 import time
 from datetime import datetime, timedelta
-
 from abc import ABC, abstractmethod
-
-from POO.func.funciones_decoradoras import pedir_password
+from funciones.funciones_decoradoras import pedir_password
 
 
 # class Objeto
@@ -73,7 +68,7 @@ class Objeto(ABC):
         
     @abstractmethod
     def mostrar_info_detallada(self):
-        return (f"INFORMACIÓN DETALLADA EL/LA {self.__class__.__name__.upper()}\n"
+        return (f"INFORMACIÓN DETALLADA SOBRE EL/LA {self.__class__.__name__.upper()}\n"
                 f"Título: {self.titulo}\n"
                 f"Idioma: {self.idioma}\n"
                 f"Año de publicación: {self.anio}\n"
