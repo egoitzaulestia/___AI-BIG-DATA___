@@ -14,9 +14,12 @@ import pandas as pd
 # ## Carga de datos 
 # ---
 
-df = pd.read_csv("./Numpy_Pandas/datos/data2.csv", sep="|", encoding="UTF-8")
+import os
+os.chdir("Z:/___AI-BIG-DATA___/01-Programacion-de-IA/02-Numpy-Pandas/datos")
 
-df = pd.read_csv("/home/laptop/Proyectos Python/Introduccion_Python/Numpy_Pandas/datos/data2.csv", sep="|", encoding="UTF-8")
+df = pd.read_csv("data2.csv", sep="|", encoding="UTF-8")
+
+df = pd.read_csv("Z:/___AI-BIG-DATA___/01-Programacion-de-IA/02-Numpy-Pandas/datos/data2.csv", sep="|", encoding="UTF-8")
 
 df.head()
 
@@ -25,7 +28,7 @@ df.head()
 import os
 
 # Cambiar por carpeta donde se encuentren los datos
-data_dir = '/home/laptop/Proyectos Python/Introduccion_Python/Numpy_Pandas/datos/'
+data_dir = 'Z:/___AI-BIG-DATA___/01-Programacion-de-IA/02-Numpy-Pandas/datos/'
 
 path = os.path.join(data_dir, 'data2.csv')
 try:
@@ -47,6 +50,11 @@ df.tail()
 #######################
 
 df.info()
+
+df.describe()  # nos muestra solo las columnas númericas
+
+descripcion = df.describe(include="all")  # todas las columnas
+
 # ### Corregimos los tipos de datos
 # Modificamos la carga de datos definiendo:
 # * Columnas que utilizar.
@@ -54,18 +62,18 @@ df.info()
 # * Tipo del resto de columnas.
 # * Eliminar columna 0
 
-df['Catastro'] = df['Catastro'].astype('string')
+df['Catastro'] = df['Catastro'].astype('string')  # Así podemos acceder a los metodos de str
 df['IdCliente'] = df['IdCliente'].astype('string')
 df['Catastro'].str.lower()
 
-df["Producto"].unique()
+df["Producto"].unique()  # Vemos los valores únicos
 df['Producto'] = df['Producto'].astype('category')
-df['Producto'].cat.categories
+df['Producto'].cat.categories  # .cat son metodos para columnas categoricas
 
 df['TipoProducto'].unique()
 df['TipoProducto'] = df['TipoProducto'].astype('category')
 
-
+dir(df['TipoProducto'].cat)
 
 # ### Corregimos el resto de errores
 # Si alguna columna no se ha modificado su tipo, puede ser porque contenga errores. Modificamos el tipo indicando que se ignoren los errores.
@@ -76,7 +84,9 @@ df.info()
 
 df['Fecha'].dt.day_name()
 
-df = df.drop('Unnamed: 0', axis=1)
+df["Dia_semana"] = df['Fecha'].dt.day_name()
+
+df = df.drop('Unnamed: 0', axis=1)  # datetime tiene métodos .dt
 
 ##############################
 # Exploración y modificación #
@@ -90,7 +100,7 @@ df = df.rename(columns={'Catastro':'CatastroMax','ReferenciaCP':'CPReferenciado'
 
 df.columns
 # Otra forma de dar nombre a las columnas
-# df.columns = ['CatMax', 'CPReferenciado', 'Id', 'Producto', 'Fecha', 'TProducto', 'AltaCliente']
+df.columns = ['CatMax', 'CPReferenciado', 'Id', 'Producto', 'Fecha', 'TProducto', 'AltaCliente', 'dia_de_la_semana']
 df.head()
 
 # Generar variables dummies
@@ -105,7 +115,7 @@ df_dummies_Producto.info()
 # Agrupaciones #
 #_______________
 # Voy a generar una columna con supuestos datos de facturación
-df_dummies_Producto['Facturacion'] = df_dummies_Producto['IdCliente'].astype('int') / 40 * 1.3
+df_dummies_Producto['Facturacion'] = df_dummies_Producto['Id'].astype('int') / 40 * 1.3
 
 df_dummies_Producto.head()
 
@@ -150,22 +160,30 @@ df['IdCliente'] = df['IdCliente'].astype('int')
 
 df.query('AltaCliente.dt.day <= 10 and IdCliente<100000')["IdCliente"]
 
+consulta = df.query('AltaCliente.dt.day <= 10 and IdCliente<100000')
+
 # ### Consultas más complejas
 # Podemos usar el contenido de una variable añadiendo su nombre tras el carácter @
 
 productos = ['N01', 'N06']
+df.query('AltaCliente.dt.day <= 10 and Producto in @productos')
+
 for producto in productos:
-    df.query('AltaCliente.dt.day <= 10 and Producto in @producto')
+    print(df.query('AltaCliente.dt.day <= 10 and Producto in @producto'))
+    
+for producto in productos:
+    print(df.query('AltaCliente.dt.day <= 10 and Producto in @producto')[["AltaCliente", "Producto"]])
 
 producto = 'N01'
 tipoprod = 'Servicio sin cuota'
 filtrado = df.query('AltaCliente.dt.day <= 10 and (Producto == @producto or TipoProducto == @tipoprod)')
 filtrado[["Producto", "TipoProducto", "AltaCliente"]]
 
+
 # Extraemos del CatastroMax el código de área
 # Para ello eliminamos primero todos los espacios y posteriormente extraemos el texto de las posiciones 3 a 4
 #df['Provincia'] = df['CatastroMax'].str.replace(" ","")
-df['Provincia'] = df['CatastroMax'].str.slice(4,6)
+df['Provincia'] = df['CatMax'].str.slice(4,6)
 df.head(20)
 
 
@@ -174,7 +192,7 @@ df.query('AltaCliente.dt.month == 4')
 
 
 # ### Facturación media del mes de abril del 2020
-df ['Facturacion'] = df['IdCliente'].astype('int') / 40 * 1.3
+df ['Facturacion'] = df['Id'].astype('int') / 40 * 1.3
 df.query('Fecha.dt.month == 4')['Facturacion'].sum()
 
 
@@ -182,7 +200,7 @@ df.query('Fecha.dt.month == 4')['Facturacion'].sum()
 df.info()
 df['Provincia'] = df['Provincia'].astype('string')
 
-no_vizcainos = df.query('Provincia != "48"')
+no_vizcainos = df.query('Provincia != "48" and Producto == "N06"')
 no_vizcainos['Facturacion'].max()
 no_vizcainos['Facturacion'].min()
 

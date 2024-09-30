@@ -238,7 +238,7 @@ df[df['W'] > 0]
 
 df[df['W'] > 0]['Y']
 
-df[df['W']>0][['Y','X']]
+df[df['W']>0][['Y','X']] # "edad mayor de 18 y las columans Y e X
 
 
 # Podemos concatenar condiciones con operadores lógicos `|` y `&`.  
@@ -247,7 +247,7 @@ df
 
 df[(df['W']<0) & (df['Y'] < 1)]
 
-# Lo contrario de una condición usando ~
+# Lo contrario de una condición usando ~ = VIRGULILLA para negar.
 df[(df['W']>0) & ~(df['Y'] > 1)]
 
 filtro
@@ -258,6 +258,10 @@ df[(df['W']>0) | (df['Y'] > 1)]
 #__________________________
 # Más sobre índices
 #__________________________
+
+df = pd.DataFrame(randn(5,4),index=['A','B','C','D','E'], columns=['W', 'X', 'Y', 'Z'])
+
+
 df
 
 # Reseteamos el índice a una secuencia de 0 a n
@@ -265,6 +269,9 @@ df2 = df.reset_index()
 # Al resetear un índice, el viejo índice se convierte en columna y se crea otro basado en las posiciones
 # Conviene hacer reset_index antes de set_index si quiero guardar la información de un índice.
 # Si no pongo "inplace=True" no se modifica el original
+
+df = pd.DataFrame(randn(5,4),index=['A','B','C','D','E'], columns=['W', 'X', 'Y', 'Z'])
+
 
 nuevo_indice = 'CA NY WY OR CO'.split()
 print(nuevo_indice)
@@ -310,6 +317,7 @@ df.loc['G1']
 
 
 df.loc['G2'].loc[1]
+df.loc['G2'].loc[1]["A"]
 
 # Podemos entender G1 y G2 como una columna extra que se usa para el filtrado.
 # Además a los índices podemos asignarles nombres
