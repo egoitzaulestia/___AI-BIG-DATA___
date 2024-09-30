@@ -25,7 +25,12 @@ np.ones(10)
 6 * np.ones(10)
 
 # Opción B
-np.full(10, 6)
+seises = np.full(10, 6.0)
+seises
+
+seises_str = np.full(10, "6")
+seises_str.astype(np.int8)
+
 
 
 
@@ -37,7 +42,7 @@ np.arange(20, 41)
 
 # #### Generar un array con todos los números pares desde el 15 al 59
 
-np.arange(15, 60, 2) # (start, stop, step)
+np.arange(16, 60, 2) # (start, stop, step)
 
 
 
@@ -49,43 +54,67 @@ my_matrix = arr.reshape(4, 3)
 
 my_matrix
 
+# otra opción
+
+np.arange(0,12).reshape(4, 3)
+
 
 
 # #### Generar una matriz identidad de 4x4
 
-np.eye(4)
+mIdentidad = np.eye(4)
 
 
 
 # #### Generar un número aleatorio entre 0 y 1
+np.random.random()
 
-np.random.rand(1)
+np.random.rand(1) # Ojo, esto devuelve un array
+
+np.random.choice(["a", "b", "c", "d"])
 
 
 
 # #### Generar un número aleatorio entre 0 y 2
+2*np.random.random()
 
-np.random.uniform(0, 2, 1)
+# esto saca un array, nos valdría para un array con números alñeatorios
+cincuenta = np.random.uniform(0, 2, 50)
 
-
+cincuenta.reshape(5, 2, 5).round(4)
 
 # #### Usar NumPy para generar un array de 25 números aleatorios extraídos de 
 # una distribución normal.
 
 np.random.randn(25)
 
+aleatorios = np.random.randn(250_000_000).round(2)
 
+aleatorios.mean()
+aleatorios.std()
+
+
+hojas = 2*np.random.randn(500) + 10
+hojas.mean()
+hojas.std()
 
 # #### Generar una matriz de 10x10 cuyos valores estén comprendidos 
 # entre 0.01 y 1, en incrementos de 0.01:
 
-arr_2 = np.linspace(0.01, 1, 100)
+    
+matriz_1 = np.arange(0.01, 1.01, 0.01).reshape(10, 10)
+
+# numeros de corte
+arr_2 = np.linspace(0.01, 1, 100) # esto nos sirve para hacer ejes
 
 arr_2.reshape(10, 10)
 
 
 
 # #### Generar un array de 20 elementos comprendidos entre el 0 y 1.
+
+un = np.random.random(20)
+un
 
 np.linspace(0, 1, 20)
 
@@ -141,16 +170,23 @@ mat[3:,:]
 
 # #### Sumar todos los elementos existentes en mat
 
+dir(mat)
 # Opción A
-mat.sum()
+mat.sum()  # sum de numpy
 
 # Opción B
 sum(sum(mat))
 
+# Opción C
+np.sum(mat)  # sum de numpy
+
+
 
 # #### Calcular la desviación estándar del array mat
-
 mat.std()
+
+
+type(mat[0,0])
 
 
 # #### Calcular la suma de cada columna en mat

@@ -77,6 +77,7 @@ serie_con_labels2 == serie_con_labels4
 # Pandas usa los índices en formato numéricos o texto. 
 ser1 = pd.Series([1,2,3,4], index = ['USA', 'Germany','USSR', 'Japan'])
 ser2 = pd.Series([1,2,5,4], index = ['Germany','Italy', 'Japan','USA'])
+ser1 == ser2  # Esto da error
 
 print(ser1)
 print(ser2)
@@ -112,6 +113,7 @@ df
 # Selección e indexación
 #__________________________
 df['W']
+
 
 type(df)
 # ¿Qué tipo de dato hay en la columna W?
@@ -195,6 +197,7 @@ df.iloc[:2]
 df.iloc[1:4, 1:3]
 
 
+# ESTA ES LA ÁS HABITUAL
 # De manera mixta (columnas por nombre, filas por iloc, lo más habitual)
 df.iloc[1:3][['X', 'Z', 'clase']]
 
@@ -227,6 +230,7 @@ type(df[filtro])
 
 # Al ser un dataframe, puedo seleccionar datos con las mismas reglas de selección que hemos visto
 df[filtro]['Y']
+type(df[filtro]['Y'])
 df[filtro][['Y','X']]
 
 # Normalmente no se crea el objeto "filtro" sino que se introduce su creación de forma anidada.
