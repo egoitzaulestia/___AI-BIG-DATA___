@@ -86,43 +86,139 @@ seleccion = cliente[cliente.columns[cliente.columns.str.lower().str.startswith("
 # Guarda el resultado en un dataset llamado 'seleccion', comprueba además que efectivamente no tenemos 
 # registros de Hombres en 'seleccion'
 
+filtro_es_mujer = cliente["Sexo"] == "M"
+cliente[filtro_es_mujer]
 
+
+# Mediante 
 seleccion = cliente[cliente["Sexo"] == "M"]
-seleccion
+seleccion["Sexo"].unique()
+seleccion["Sexo"].value_counts()  # 82 Mujeres
+
+seleccion = cliente.query("Sexo == 'M'")
+
+
+seleccion_H = cliente[cliente["Sexo"] == "H"]
+seleccion_H["Sexo"].unique()
+seleccion_H["Sexo"].value_counts()  # 118 Hombres
 
 
 
-# #### Filtrar el dataset 'cliente' y quédate con aquellos registros cuyo idCliente sea menor a 50.  
+# #### Filtrar el dataset 'cliente' y quédate con aquellos registros cuyo idCliente 
+# sea menor a 50.  
 # Guarda el resultado en un dataset llamado 'seleccion'.  
 # Comprueba que efectivamente los idCliente en 'seleccion' sean los buscados.
 
 
+cliente_filtrado = cliente[cliente["idCliente"] < 50]
+
+
+# Guardar un CSV
+cliente_filtrado.to_csv('seleccion.csv')
 
 
 
-
-# #### En la tabla 'cliente' crea una nueva columna llamada 'nuevacolumna' y que contenga 'Mujer' 
-# sí la columna Sexo es M u 'Hombre' si la columna Sexo es H.  Comprueba el resultado obtenido.
-
-
+# #### En la tabla 'cliente' crea una nueva columna llamada 'nuevacolumna'
+# y que contenga 'Mujer' sí la columna Sexo es M u 'Hombre' 
+# si la columna Sexo es H.  Comprueba el resultado obtenido.
 
 
+cliente["nuevacolumna"] = "xxx"
+
+cliente["nuevacolumna"][cliente["Sexo"] == "M"] = "Mujer"
+cliente["nuevacolumna"][cliente["Sexo"] == "H"] = "Hombre"
 
 
-# #### Crea una nueva columna en 'cliente' llamada 'Apellidos' con este formato Apellidos = Apellido1, Apellido2. 
+
+cliente["nuevacolumna2"] = "Mujer"
+filtro_es_hombre = cliente["Sexo"] == "H"
+
+
+# Otra opción
+cliente["nuevacolumnaWhere"] = np.where(cliente["Sexo"] == "H", "Hombre", "Mujer")
+
+
+# Otra manera 
+cliente["nuevacolumna4"] = cliente["Sexo"]
+# cliente["nuevacolumna4"] = cliente["nuevacolumna4"].as
+
+
+
+# #### Crea una nueva columna en 'cliente' llamada 'Apellidos' con este formato 
+# Apellidos = Apellido1, Apellido2. 
 # Ejemplo: 
 # Apellido1: XXXXXX
 # Apellido2: YYYYYY
 # Resultado -> Apellidos: XXXXXX, YYYYYY
 
+cliente["Apellidos"] = cliente[["Apellido1", "Apellido2"]].agg(", ".join, axis=1)
 
-
-
+cliente["ApellidosEasy"] = cliente["Apellido1"] + ", " + cliente["Apellido2"]
 
 
 # Utilizar métodos str para corregir los errores de formato en las columnas Telefono y Movil
 
+cliente["Telefono"].to_list()
 
+cliente["Telefono"] = cliente["Telefono"].astype("str")
+
+cliente["Telefono"] = cliente["Telefono"].replace(" ", '',  regex=True)
+cliente["Telefono"] = cliente["Telefono"].replace("-", '',  regex=True)
+cliente["Telefono"] = cliente["Telefono"].replace(",0", '',  regex=True)
+cliente["Telefono"] = cliente["Telefono"].replace("\(", '',  regex=True)
+cliente["Telefono"] = cliente["Telefono"].replace("\)", '',  regex=True)
+
+cliente["Telefono"] = cliente["Telefono"].replace("nan", '0',  regex=True)
+
+
+cliente["Movil"] = cliente["Movil"].astype("str")
+
+cliente["Movil"] = cliente["Movil"].replace(" ", '',  regex=True)
+cliente["Movil"] = cliente["Movil"].replace("-", '',  regex=True)
+cliente["Movil"] = cliente["Movil"].replace(",0", '',  regex=True)
+
+cliente["Movil"] = cliente["Movil"].replace("nan", '0',  regex=True)
+
+
+# Otra forma -> Dara error si no corremos de nuevo el datasat
+cliente["Movil"] = cliente["Movil"].replace(" ", '',  regex=True).replace("-", '',  regex=True).replace(",0", '',  regex=True).replace("\(", '',  regex=True).replace("\)", '',  regex=True).replace("nan", '0',  regex=True)
 
 
 #### Utilizar una función que se pueda aplicar con apply) a las columnas de Telefono y Movil que corrija el formato
+
+def corregir_telefono(telefono):
+    # Verifica si el valor es NaN usando pandas
+    if pd.isna(telefono):
+        return "0"
+    else:
+        # Realiza las correcciones en el string del teléfono
+        string = str(telefono).replace(" ", '').replace("-", '').replace(",0", '').replace("(", '').replace(")", '')
+        return string
+
+
+cliente["Telefono"] = cliente["Telefono"].apply(corregir_telefono)
+cliente["Movil"] = cliente["Movil"].apply(corregir_telefono)
+
+
+def corregir_telefono(telefono):
+    # Verifica si el valor es np.nan
+    if pd.notna(telefono):
+        if isinstance(telefono, float):
+            telefono = str(telefono)
+        telefono = telefono.replace(" ", "")
+        telefono = telefono.replace("-", '')
+        telefono = telefono.replace(",0", '')
+        telefono = telefono.replace("\(", '')
+        telefono = telefono.replace("\)", '')
+        telefono = telefono.replace("nan", '0')
+    return telefono
+
+
+cliente["Telefono"].apply(corregir_telefono)
+
+
+
+# Obtener el tamaño de las diferentes filas
+cliente['Tamaño'] = cliente['Telefono'].apply(lambda x: len(str(x)) if pd.notna(x) else 0)
+
+

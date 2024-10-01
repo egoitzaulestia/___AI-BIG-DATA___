@@ -254,8 +254,7 @@ consumo = pd.merge(consumo, consum_33_66, on='provincia')
 consumo['consumoProvincia'] = 'xxx'
 
 consumo['consumoProvincia'][consumo["promedio"] < consumo['p33']] = "Bajo"
-consumo['consumoProvincia'][(consumo["promedio"] > consumo['p33']) &
-                            (consumo["promedio"] < consumo['p66'])] = "Medio"
+consumo['consumoProvincia'][(consumo["promedio"] > consumo['p33']) & (consumo["promedio"] < consumo['p66'])] = "Medio"
 consumo['consumoProvincia'][consumo["promedio"] > consumo['p66']] = "Alto"
 
 consumo["consumoProvincia"].value_counts()

@@ -473,6 +473,9 @@ derecha
 
 # 4 diferentes tipos de fusionado: inner, left, rigth, outer
 # Este es el caso más fácil en que las claves coinciden
+
+pd.merge(izquierda, derecha, on='key')  # Esto es INNER join
+
 pd.merge(izquierda, derecha, how='left', on='key')
 
 
@@ -609,7 +612,7 @@ df['col1'] = 2*df['col1']
 df['col1'].apply(lambda x: x**2)
 
 def anade_h(string):
-    if len(string)==0:
+    if len(string)!=0:
         return string + "h"
     else:
         return string
