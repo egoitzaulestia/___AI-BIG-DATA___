@@ -116,5 +116,11 @@ names(DatosFinal) <- c("MSZoning", "Media", "Desviación")
 
 
 # 7. Calcular el cociente entre Media y Desviación.
+
+DatosFinal["Cociente"] = DatosFinal$Media / DatosFinal$Desviacio
 # 8. Normalizar la tablas creadas en el ejercicio tres.
+
+# tambien se puede normalizar la tabla por dos filas.
+FechaCP_Tipo = dcast(datos2,fecha+cp~tipo, value.var = "importetotal")
+
 # 9. Verticalizar los datos originales por la Id.
