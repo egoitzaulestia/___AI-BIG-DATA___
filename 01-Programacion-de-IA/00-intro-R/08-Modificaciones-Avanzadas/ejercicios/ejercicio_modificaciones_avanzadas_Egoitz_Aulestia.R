@@ -112,15 +112,48 @@ DatosFinal = merge(MeanTipo, DesvTipo, by = "MSZoning")
 #    “Desviación”.
 
 # Renombramos las columnas 
-names(DatosFinal) <- c("MSZoning", "Media", "Desviación")
+names(DatosFinal) = c("MSZoning", "Media", "Desviación")
 
 
 # 7. Calcular el cociente entre Media y Desviación.
 
-DatosFinal["Cociente"] = DatosFinal$Media / DatosFinal$Desviacio
+sum(is.na(DatosFinal$Media))      # Verifica NA en Media
+sum(is.na(DatosFinal$Desviación))  # Verifica NA en Desviación
+
+sum(DatosFinal$Desviación == 0)
+
+DatosFinal["Cociente"] = "XXX"
+
+# Evitamos divisiones por 0 y valores nulos
+DatosFinal$Cociente = ifelse(DatosFinal$Desviación != 0 & !is.na(DatosFinal$Desviación), 
+                              DatosFinal$Media / DatosFinal$Desviación, 
+                              NA)
+
+
 # 8. Normalizar la tablas creadas en el ejercicio tres.
 
-# tambien se puede normalizar la tabla por dos filas.
-FechaCP_Tipo = dcast(datos2,fecha+cp~tipo, value.var = "importetotal")
+library(reshape2)
+
+# Reorganizamos la tabla Tipo2 (Importe total)
+Tipo2_pivot = dcast(Tipo2, Crisis ~ MSZoning, value.var = "SalePrice")
+Tipo2_pivot
+
+# Reorganizamos la tabla CountTipo2 (Número total de transacciones)
+CountTipo2_pivot = dcast(CountTipo2, Crisis ~ MSZoning, value.var = "SalePrice")
+CountTipo2_pivot
+
+# Reorganizamos la tabla MeanTipo2 (Valor medio)
+MeanTipo2_pivot = dcast(MeanTipo2, Crisis ~ MSZoning, value.var = "SalePrice")
+MeanTipo2_pivot
+
+# Reorganizamos la tabla DesvTipo2 (Desviación típica)
+DesvTipo2_pivot = dcast(DesvTipo2, Crisis ~ MSZoning, value.var = "SalePrice")
+DesvTipo2_pivot
+
 
 # 9. Verticalizar los datos originales por la Id.
+
+datos = read.csv("trainmod.csv",stringsAsFactors = TRUE)
+
+datos_verticalizados = melt(datos, id.vars = "Id")
+datos_verticalizados
