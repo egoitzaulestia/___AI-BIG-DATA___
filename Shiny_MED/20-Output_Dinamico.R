@@ -29,7 +29,7 @@ ui <- fluidPage(
             uiOutput("ui")
         )),
         
-        column(3,
+        column(6,
                tags$p("Input type:"),
                verbatimTextOutput("input_type_text"),
                tags$p("Dynamic input value:"),
