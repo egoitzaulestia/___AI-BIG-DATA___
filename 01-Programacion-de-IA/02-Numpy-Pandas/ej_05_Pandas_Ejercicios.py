@@ -43,9 +43,8 @@ cliente[1:5]
 seleccion = cliente.iloc[:,1:5]
 seleccion
 
-# VERSIÓN PROFE
-cliente.iloc[:,1:5]
-# clinete[cliente.columns[1:5]]
+# Otra opción
+cliente[cliente.columns[1:5]]
 
 
 # #### Crea un subset de los datos que incluya sólo datos de las columnas 1, 2 y 4 y 
@@ -54,9 +53,8 @@ cliente.iloc[:,1:5]
 # 
 
 seleccion = cliente.iloc[1:10, [1, 2, 4]]
+seleccion
 
-# VERSIÓN PROFE
-cliente.iloc[1:10, [1, 2, 4]]
 
 # #### Mostrar el valor de la última celda del dataframe
 seleccion.iloc[-1][-1]
@@ -72,14 +70,18 @@ filtrar_col = [col for col in cliente if col.startswith('C')]
 seleccion = cliente[filtrar_col]
 seleccion
 
-
-# PROFE:
+# Otra opción:
 columnas_deseadas = list(filter(lambda x: x.lower().startswith("c"), cliente.columns))
 seleccion = cliente[columnas_deseadas]
+seleccion
 
+# Otra opción:
 seleccion = cliente.iloc[:, cliente.columns.str.lower().str.startswith("c")]
+seleccion
 
+# Otra opción:
 seleccion = cliente[cliente.columns[cliente.columns.str.lower().str.startswith("c")]]
+seleccion
 
 
 # #### Filtra el dataset original y crea un subset de datos que incluya sólo aquellos registros que sean Mujer.  
@@ -87,21 +89,28 @@ seleccion = cliente[cliente.columns[cliente.columns.str.lower().str.startswith("
 # registros de Hombres en 'seleccion'
 
 filtro_es_mujer = cliente["Sexo"] == "M"
-cliente[filtro_es_mujer]
+mujeres = cliente[filtro_es_mujer]
+mujeres
 
 
-# Mediante 
-seleccion = cliente[cliente["Sexo"] == "M"]
-seleccion["Sexo"].unique()
-seleccion["Sexo"].value_counts()  # 82 Mujeres
-
-seleccion = cliente.query("Sexo == 'M'")
+# Otra opción 
+seleccion_M = cliente[cliente["Sexo"] == "M"]
+seleccion_M
 
 
+seleccion_M["Sexo"].unique()
+seleccion_M["Sexo"].value_counts()  # 82 Mujeres
+seleccion_M
+
+# Checkeamos los hombre
 seleccion_H = cliente[cliente["Sexo"] == "H"]
 seleccion_H["Sexo"].unique()
 seleccion_H["Sexo"].value_counts()  # 118 Hombres
 
+
+# Otra opción, esta vez con una query
+seleccion = cliente.query("Sexo == 'M'")
+seleccion
 
 
 # #### Filtrar el dataset 'cliente' y quédate con aquellos registros cuyo idCliente 
@@ -112,6 +121,9 @@ seleccion_H["Sexo"].value_counts()  # 118 Hombres
 
 cliente_filtrado = cliente[cliente["idCliente"] < 50]
 
+# Comprobar los idCliente en el dataset filtrado
+cliente_filtrado["idCliente"].unique()
+cliente_filtrado["idCliente"].max()
 
 # Guardar un CSV
 cliente_filtrado.to_csv('seleccion.csv')
@@ -129,18 +141,24 @@ cliente["nuevacolumna"][cliente["Sexo"] == "M"] = "Mujer"
 cliente["nuevacolumna"][cliente["Sexo"] == "H"] = "Hombre"
 
 
+# Otra opción usando .loc
+cliente["nuevacolumna2"] = "xxx"
+cliente.loc[cliente["Sexo"] == "M", "nuevacolumna2"] = "Mujer"
+cliente.loc[cliente["Sexo"] == "H", "nuevacolumna2"] = "Hombre"
 
-cliente["nuevacolumna2"] = "Mujer"
-filtro_es_hombre = cliente["Sexo"] == "H"
 
-
-# Otra opción
+# Otra opción con np.where
 cliente["nuevacolumnaWhere"] = np.where(cliente["Sexo"] == "H", "Hombre", "Mujer")
 
 
 # Otra manera 
-cliente["nuevacolumna4"] = cliente["Sexo"]
-# cliente["nuevacolumna4"] = cliente["nuevacolumna4"].as
+cliente["nuevacolumna3"] = cliente["Sexo"]
+
+# Reemplazamos "M" por "Mujer" y "H" por "Hombre" en la nueva columna
+cliente["nuevacolumna3"] = cliente["nuevacolumna3"].replace({"M": "Mujer", "H": "Hombre"})
+
+# Mostrar el resultado para verificar
+cliente[["Sexo", "nuevacolumna3"]].head()
 
 
 
@@ -181,13 +199,40 @@ cliente["Movil"] = cliente["Movil"].replace("nan", '0',  regex=True)
 
 
 # Otra forma -> Dara error si no corremos de nuevo el datasat
-cliente["Movil"] = cliente["Movil"].replace(" ", '',  regex=True).replace("-", '',  regex=True).replace(",0", '',  regex=True).replace("\(", '',  regex=True).replace("\)", '',  regex=True).replace("nan", '0',  regex=True)
+cliente["Movil"] = cliente["Movil"].replace(" ", '',  regex=True)\
+                                   .replace("-", '',  regex=True)\
+                                   .replace(",0", '',  regex=True)\
+                                   .replace("\(", '',  regex=True)\
+                                   .replace("\)", '',  regex=True)\
+                                   .replace("nan", '0',  regex=True)
+
+
+# Otra forma
+cliente["Telefono"] = cliente["Telefono"].astype(str)
+cliente["Movil"] = cliente["Movil"].astype(str)
+
+cliente["Telefono"] = cliente["Telefono"].str.replace(" ", "", regex=True)\
+                                         .str.replace("-", "", regex=True)\
+                                         .str.replace(",0", "", regex=True)\
+                                         .str.replace(r"\(|\)", "", regex=True)\
+                                         .str.replace("nan", "0", regex=True)
+
+# Limpiar los valores de la columna Movil
+cliente["Movil"] = cliente["Movil"].str.replace(" ", "", regex=True)\
+                                   .str.replace("-", "", regex=True)\
+                                   .str.replace(",0", "", regex=True)\
+                                   .str.replace("nan", "0", regex=True)
+
+# Comprobamos el resultado
+print(cliente[["Telefono", "Movil"]].head())
 
 
 #### Utilizar una función que se pueda aplicar con apply) a las columnas de Telefono y Movil que corrija el formato
 
+cliente = pd.read_csv("datos/dimension_cliente.csv", sep="\t", encoding="UTF-8")
+
 def corregir_telefono(telefono):
-    # Verifica si el valor es NaN usando pandas
+    # Verifica si el valor es NaN 
     if pd.isna(telefono):
         return "0"
     else:
@@ -199,6 +244,28 @@ def corregir_telefono(telefono):
 cliente["Telefono"] = cliente["Telefono"].apply(corregir_telefono)
 cliente["Movil"] = cliente["Movil"].apply(corregir_telefono)
 
+
+# Otra opción utilizando regex
+import re
+
+cliente = pd.read_csv("datos/dimension_cliente.csv", sep="\t", encoding="UTF-8")
+
+
+# Función optimizada utilizando expresiones regulares
+def corregir_telefono(telefono):
+    if pd.isna(telefono):
+        return "0"
+    else:
+        # Eliminar espacios, guiones, paréntesis y ",0" en una sola expresión
+        return re.sub(r"[ \-,()]", "", str(telefono).replace(",0", ""))
+
+
+cliente["Telefono"] = cliente["Telefono"].apply(corregir_telefono)
+cliente["Movil"] = cliente["Movil"].apply(corregir_telefono)
+
+
+# Otra opción pero manteniendo los NaN
+cliente = pd.read_csv("datos/dimension_cliente.csv", sep="\t", encoding="UTF-8")
 
 def corregir_telefono(telefono):
     # Verifica si el valor es np.nan
@@ -214,11 +281,13 @@ def corregir_telefono(telefono):
     return telefono
 
 
-cliente["Telefono"].apply(corregir_telefono)
+cliente["Telefono"] = cliente["Telefono"].apply(corregir_telefono)
+cliente["Movil"] = cliente["Movil"].apply(corregir_telefono)
 
 
 
 # Obtener el tamaño de las diferentes filas
-cliente['Tamaño'] = cliente['Telefono'].apply(lambda x: len(str(x)) if pd.notna(x) else 0)
+cliente['Tamaño'] = cliente['Telefono'].apply(lambda x: len(x) if pd.notna(x) else 0)
+cliente['Tamaño']
 
 
