@@ -1,3 +1,18 @@
+# # Instalar las librerías si no las tienes
+# install.packages('shiny')
+# install.packages('rmarkdown')
+# install.packages('tinytex')
+# 
+# # Instalar TinyTeX si aún no lo tienes
+# tinytex::install_tinytex()
+
+# Cargar las librerías
+library(shiny)
+library(rmarkdown)
+library(tinytex)
+
+
+
 function(input, output) {
 
   regFormula <- reactive({

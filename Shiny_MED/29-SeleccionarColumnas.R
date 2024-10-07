@@ -8,6 +8,9 @@ ui <- fluidPage(
             background: linear-gradient(#cdb08d, #FFF3E3);
             margin-top: 30px;
           }
+          .nav-tabs>li.active>a: {
+            background: Yellow;
+          }
           .col-sm-8 {
             margin-top: 130px;
           }

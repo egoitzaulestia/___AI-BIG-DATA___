@@ -82,7 +82,6 @@ server <- function(input, output) {
     Data <- Data[Data$Embarked %in% input$Selec_Enbarked,]
     Data = Data[Data$Fare >= input$Selec_Precio[1] &  Data$Fare <= input$Selec_Precio[2],]
     
-    
     Data
   })
   

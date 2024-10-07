@@ -2,7 +2,7 @@ function(input, output, session) {
   output$plot <- renderPlot({
     mtscaled <- as.matrix(scale(mtcars))
     heatmap(mtscaled,
-      col = topo.colors(200, alpha=0.5),
+      col = topo.colors(500, alpha=0.5),
       Colv=F, scale="none")
   })
 
