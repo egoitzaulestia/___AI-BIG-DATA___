@@ -802,11 +802,7 @@ css <- "
     background-color: #7F5539; /* Efecto hover en los botones */
     color: #E6CCB2;
   }
-  /* Cambiar color de fondo y texto de la fila seleccionada en DataTable */
-  table.dataTable tbody tr.selected {
-    background-color: #7F5539 !important;  /* Fondo amarillo oro */
-    color: #000000 !important;  /* Texto negro */
-  }
+
   table.dataTable.display>tbody>tr.odd.selected>*{
       box-shadow: inset 0 0 0 9999px rgba(127, 85, 57, 0.923);
       /* box-shadow: inset 0 0 0 9999px rgba(var(127, 85, 57, 0.923); */
@@ -820,14 +816,20 @@ css <- "
       box-shadow: inset 0 0 0 9999px rgba(127, 85, 57, 0.923);
       /* box-shadow: inset 0 0 0 9999px rgba(var(127, 85, 57, 0.923); */
   }
-  table.dataTable.display>tbody>tr.even.selected:hover>*{
-    box-shadow: inset 0 0 0 9999px rgba(127, 85, 57, 0.923);
-    /* box-shadow: inset 0 0 0 9999px rgba(var(127, 85, 57), 0.923); */
+
+  table.dataTable.hover>tbody>tr:hover>*, table.dataTable.display>tbody>tr:hover>* {
+      box-shadow: inset 0 0 0 9999px rgba(255, 255, 255, 0.035);
+      /* box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-hover), 0.035); */
   }
-table.dataTable.hover>tbody>tr:hover>*, table.dataTable.display>tbody>tr:hover>* {
-    box-shadow: inset 0 0 0 9999px rgba(255, 255, 255, 0.035);
-    /* box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-hover), 0.035); */
+
+  table.dataTable.hover>tbody>tr.selected:hover>*,table.dataTable.display>tbody>tr.selected:hover>* {
+      box-shadow: inset 0 0 0 9999px rgba(176, 137, 104, 1) !important;
+  }
+  
+  table.dataTable.row-border>tbody>tr.selected+tr.selected>td,table.dataTable.display>tbody>tr.selected+tr.selected>td {
+    border-top-color: #E6CCB2;
 }
+
 "
 
 # Define UI for application
