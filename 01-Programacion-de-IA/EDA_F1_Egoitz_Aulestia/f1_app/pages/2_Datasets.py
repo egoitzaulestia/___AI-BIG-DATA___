@@ -18,7 +18,17 @@ datasets = {
     "Drivers": "data/drivers.csv",
     "Constructors": "data/constructors.csv",
     "Results": "data/results.csv",
-    # Añade más datasets según sea necesario
+    "Circuits": "data/circuits.csv",
+    "Constructor Results": "data/constructor_results.csv",
+    "Constructor Standing": "data/constructor_standings.csv",
+    "Driver Standings": "data/driver_standings.csv",
+    "Lap Times": "data/lap_times.csv",
+    "Pit Stops": "data/pit_stops.csv",
+    "Qualifying": "data/qualifying.csv",
+    "Seasons": "data/seasons.csv",
+    "Sprint Results": "data/sprint_results.csv",
+    "Status": "data/status.csv",
+    "F1 Weather (2023-2018)": "data/F1 Weather(2023-2018).csv"
 }
 
 # Selección de dataset
