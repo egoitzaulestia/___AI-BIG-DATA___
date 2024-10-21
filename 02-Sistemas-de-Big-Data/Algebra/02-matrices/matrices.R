@@ -232,3 +232,33 @@ echelon(D,verbose=T)
 
 
 
+# Definir la matriz A
+A <- matrix(c(3, 6, -5, 0,
+              1, 1, 2, 9,
+              2, 4, -3, 1), 
+            nrow = 3, byrow = TRUE)
+
+# Mostrar la matriz A
+print("Matriz A:")
+print(A)
+
+# Calcular el rango de la matriz A
+rango_A <- rankMatrix(A)[1]  # Calcular el rango de A
+
+# Convertir A a su forma escalonada reducida (forma fila reducida por Gauss-Jordan)
+A_escalonada <- gaussianElimination(A, verbose = FALSE)
+
+# Calcular el rango de la matriz escalonada
+rango_escalonada <- rankMatrix(A_escalonada)[1]
+
+# Mostrar los resultados
+print(paste("Rango de A:", rango_A))
+print(paste("Rango de la matriz escalonada de A:", rango_escalonada))
+
+# Verificar si los rangos coinciden
+if (rango_A == rango_escalonada) {
+  print("Los rangos coinciden.")
+} else {
+  print("Los rangos no coinciden.")
+}
+
