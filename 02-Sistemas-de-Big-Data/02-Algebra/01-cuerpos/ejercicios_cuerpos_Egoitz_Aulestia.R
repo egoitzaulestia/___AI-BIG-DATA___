@@ -25,7 +25,7 @@ inverso_multiplicativo <- function(a) {
 }
 
 # Ejemplo con un número natural
-a <- 2
+a = 2
 
 # Verificación de inverso aditivo
 if (!inverso_aditivo(a)) {
@@ -65,7 +65,7 @@ cat("Producto de", a, "y", b, "es:", a * b, "y producto de", b, "y", a, "es:", b
 
 # 3. Operaciones asociativas:
 # Asociatividad en la suma y el producto
-c <- 4
+c = 4
 cat("Suma asociativa: (a + b) + c =", (a + b) + c, "y a + (b + c) =", a + (b + c), "\n")
 cat("Producto asociativa: (a * b) * c =", (a * b) * c, "y a * (b * c) =", a * (b * c), "\n")
 
