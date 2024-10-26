@@ -492,7 +492,7 @@ if (det_A != 0) {
 
 
 
-######## Ejercicio 13 ##########
+######## Ejercicio 14 ##########
 
 # Sea B la matriz cuadrada A ∈ Mn(K) dada por:
 
