@@ -34,8 +34,6 @@ x = c(0, 1, 2, 3, 4)
 y = c(50, 66.5, 75, 81, 86.5)
 
 #1.paso: ajustar a la recta y = mx+n (mx+n = y) nuestros datos 
-ajuste = lm(y ~ x)
-ajuste
 
 #2.paso: tipo de sistema (incompatible/compatible) con el Teorema de R-F
 

@@ -4,7 +4,6 @@
 rm(list = ls())
 
 
-
 # Ejercicio 1
 # En el espacio vectorial R2 sobre el cuerpo R. ¿Es el vector (4, 6) 
 # una combinación lineal de los vectores (1, 0) y (1, 2)?
