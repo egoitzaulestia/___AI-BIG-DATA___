@@ -218,3 +218,4 @@ ggplot(datos, aes(x = x, y = y)) +
   geom_abline(slope = solucion[1], intercept = solucion[2], color = "blue") +
   labs(title = "Ajuste de mínimos cuadrados", x = "X", y = "Y") +
   theme_minimal()
+
