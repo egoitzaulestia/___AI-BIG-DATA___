@@ -38,6 +38,7 @@ class(df1$fecha)
 
 # 7. Crear una nueva variable que extraiga el año de la fecha.
 
+library(lubridate)
 df1$anio = year(df1$fecha) # sacamos el año
 
 
