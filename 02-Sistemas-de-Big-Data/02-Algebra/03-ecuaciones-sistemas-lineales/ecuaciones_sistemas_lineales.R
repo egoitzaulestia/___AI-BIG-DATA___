@@ -82,9 +82,6 @@ solucion = Solve(A,b,fractions = TRUE)
 
 
 
-
-
-
 #2. REPRESENTACIÓN DE SISTEMAS 
 
 #Podemos representar las ecuaciones con la libreria matlib,
