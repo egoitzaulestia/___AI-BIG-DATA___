@@ -46,31 +46,12 @@ datos$Area.Code=NULL
 datos$Phone=NULL
 datos$Account.Length=NULL
 
-# ###########################
-
-cor(datos)
-correlaciones = cor(datos[2:15])
-correlaciones
-hc = caret::findCorrelation(correlaciones, cutoff = .90)
-hc
-datos2 = datos[,-c(hc[1:length(hc)])]
-
-VMail.Plan
-Intl.Calls
-CustServ.Calls
-Int.l.Plan2
-
-datosFinal1 = datos[, -c(2:12)]
-library(dplyr)
-datosFinal1 <- datosFinal1 %>% select(-Intl.Charge)
-
-# ###########################
 
 aciertolog=c()
-indice = createMultiFolds(datosFinal1$Churn2, k = 5, times = 1) # Cogemos nuestra variable a elegir
+indice = createMultiFolds(datos$Churn2, k = 5, times = 1) # Cogemos nuestra variable a elegir
 for (i in 1:length(indice)){
-  datostrain = datosFinal1[ indice[[i]],]
-  datostst = datosFinal1[-indice[[i]],]
+  datostrain = datos[ indice[[i]],]
+  datostst = datos[-indice[[i]],]
   regresionlog = glm(Churn2~., data=datostrain,family=binomial)
   prediccionlog <- predict(regresionlog,datostst,type = "response")
   datostst$prediccionlog=0
@@ -91,6 +72,65 @@ mean(aciertolog)
 
 table(datos$Churn2)
 sum((datos$Churn2=="0"))/nrow(datos)
+
+# Esta parte esta hecha para la mejora
+# entre los asteriscos está la mejora
+rm(list=ls())
+
+# Tenemos que hayar las variables categóricas y pasarlas a números
+datos = read.csv("churn.csv",stringsAsFactors = TRUE)
+datos$Churn2[datos$Churn=="False."]=0
+datos$Churn2[datos$Churn=="True."]=1
+datos$Churn=NULL
+datos$Churn2=as.factor(datos$Churn2)
+
+datos$Int.l.Plan2[datos$Int.l.Plan=="no"]=0
+datos$Int.l.Plan2[datos$Int.l.Plan=="yes"]=1
+datos$Int.l.Plan=NULL
+
+datos$VMail.Plan=as.numeric(datos$VMail.Plan=="yes")
+
+
+datos$State=NULL
+datos$Area.Code=NULL
+datos$Phone=NULL
+datos$Account.Length=NULL
+
+# ###########################
+
+cor(datos)
+correlaciones = cor(datos[2:15])
+correlaciones
+hc = caret::findCorrelation(correlaciones, cutoff = .90)
+hc
+datos2 = datos[,-c(hc[1:length(hc)])]
+
+VMail.Plan
+Intl.Calls
+CustServ.Calls
+Int.l.Plan2
+
+datosFinal1 = datos[, -c(2:12)]
+library(dplyr)
+datosFinal1 <- datosFinal1 %>% select(-Intl.Charge)
+
+aciertolog=c()
+indice = createMultiFolds(datosFinal1$Churn2, k = 5, times = 1) # Cogemos nuestra variable a elegir
+for (i in 1:length(indice)){
+  datostrain = datosFinal1[ indice[[i]],]
+  datostst = datosFinal1[-indice[[i]],]
+  regresionlog = glm(Churn2~., data=datostrain,family=binomial)
+  prediccionlog <- predict(regresionlog,datostst,type = "response")
+  datostst$prediccionlog=0
+  datostst$prediccionlog[prediccionlog>0.5]=1
+  datostst$prediccionlog=as.factor(datostst$prediccionlog)
+  resultadoslog=cbind.data.frame(datostst$Churn2,datostst$prediccionlog,prediccionlog)
+  #confusionMatrix(datostst$prediccionlog, datostst$Churn2)
+  resultado   = confusionMatrix(datostst$prediccionlog, datostst$Churn2)$overall[1]
+  aciertolog = rbind(aciertolog,c(resultado))
+  
+}
+# ###########################
 
 
 
@@ -145,6 +185,8 @@ prediccion[is.na(prediccion)]="DUDA"
 matriz = table(prediccion, labeltst$Churn)
 matriz
 
+
+
 ###################
 #Arbol de decision#
 ###################
@@ -182,6 +224,7 @@ print(tab)
 arbol_1 = sum(out==testlabels)/length(testlabels)
 
 confusionMatrix(out,datostst$Churn)
+confusionMatrix(out, as.factor(datostst$Churn))
 
 prp(tree, cex=.5,main="Arbol")
 rpart.plot(tree,cex=.5)
