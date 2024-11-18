@@ -255,14 +255,15 @@ set.seed(42)
 
 # Definir la cuadrícula de hiperparámetros
 xgb_grid <- expand.grid(
-  nrounds = c(100, 200, 300),
-  max_depth = c(4, 6, 8),
-  eta = c(0.05, 0.1, 0.3),
-  gamma = c(0, 1, 5),
-  colsample_bytree = c(0.6, 0.8, 1),
-  min_child_weight = c(1, 5, 10),
-  subsample = c(0.6, 0.8, 1)
+  nrounds = c(100, 200),  # Reducir a 2 valores
+  max_depth = c(4, 6),    # Reducir a 2 valores
+  eta = c(0.1, 0.3),      # Reducir a 2 valores
+  gamma = c(0, 1),        # Reducir a 2 valores
+  colsample_bytree = c(0.8),  # Fijar un único valor
+  min_child_weight = c(1, 5), # Reducir a 2 valores
+  subsample = c(0.8)          # Fijar un único valor
 )
+
 
 # Entrenar el modelo con validación cruzada
 xgb_model <- train(
