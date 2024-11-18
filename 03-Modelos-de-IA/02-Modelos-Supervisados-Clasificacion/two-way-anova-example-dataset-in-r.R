@@ -1,3 +1,4 @@
+rm(list = ls())
 library(readxl)
 datos <- read.csv("two-way-anova-example-dataset-in-excel.csv", sep=";")
 

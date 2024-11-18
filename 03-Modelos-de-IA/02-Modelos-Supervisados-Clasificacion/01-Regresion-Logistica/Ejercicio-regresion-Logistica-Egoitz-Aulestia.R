@@ -27,18 +27,16 @@ if(length(new)) install.packages(new)
 a=lapply(packages, require, character.only=TRUE)
 
 
-# PASO 1
-# Cargar datos
-# Tenemos que hayar las variables categóricas y pasarlas a números
-
-
 packages <- c("class","SDMTools","ggplot2","reshape2","clusterSim")
 new <- packages[!(packages %in% installed.packages()[,"Package"])]
 if(length(new)) install.packages(new)
 a=lapply(packages, require, character.only=TRUE)
 
+
+
 rm(list=ls())
 
+load("Peso1.RData")
 datos = Peso1
 
 datos$sexo2[datos$sexo== 0]=0
@@ -70,5 +68,5 @@ confusionMatrix(datostst$prediccionlog, datostst$sexo2)
 aciertolog # Nos devuelve los 5 accuracies de cada fold de la VALIDACIÓN CRUZADA
 mean(aciertolog)
 
-table(datos$Churn2)
-sum((datos$Churn2=="0"))/nrow(datos)
+table(datos$sexo2)
+sum((datos$sexo2=="0"))/nrow(datos)

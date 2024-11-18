@@ -78,6 +78,172 @@ mean(aciertolog)
 table(datos$ventas_altas2)
 sum((datos$ventas_altas2=="0"))/nrow(datos)
 
+####################################
+####################################
+####################################
+
+rm(list=ls())
+
+# Importamos datos Ventas.RData
+load("Ventas.RData")
+datos = datos
+
+# Preparación de datos
+datos$ventas_altas2[datos$ventas_altas=="Si"] = 1
+datos$ventas_altas2[datos$ventas_altas=="No"] = 0
+datos$ventas_altas = NULL
+datos$ventas_altas2 = as.factor(datos$ventas_altas2)
+
+datos$US2[datos$US=="Yes"] = 1
+datos$US2[datos$US=="No"] = 0
+datos$US = NULL
+
+datos$Urban2 = as.numeric(datos$Urban == "Yes")
+datos$Urban = NULL
+
+# Convertir ShelveLoc en una variable ordinal y luego a numérico
+datos$ShelveLoc <- factor(datos$ShelveLoc, levels = c("Bad", "Medium", "Good"), ordered = TRUE)
+datos$ShelveLoc <- as.numeric(datos$ShelveLoc)
+
+# Escalamos los datos
+datos[, c(1,2,3,4,5,6,7,8,10,11)] = scale(datos[, c(1,2,3,4,5,6,7,8,10,11)])
+
+# Inicializamos listas para almacenar resultados de cada fold
+resultados_test <- data.frame(Fold = integer(), Accuracy = numeric(), Sensitivity = numeric(), Specificity = numeric())
+resultados_train <- data.frame(Fold = integer(), Accuracy = numeric(), Sensitivity = numeric(), Specificity = numeric())
+
+# Validación cruzada
+set.seed(123)  # Para reproducibilidad
+indice = createMultiFolds(datos$ventas_altas2, k = 5, times = 1)
+
+for (i in 1:length(indice)) {
+  datostrain = datos[indice[[i]], ]
+  datostst = datos[-indice[[i]], ]
+  
+  # Ajuste del modelo de regresión logística
+  regresionlog = glm(ventas_altas2 ~ ., data = datostrain, family = binomial)
+  
+  # Predicciones en el conjunto de prueba
+  prediccionlog_test <- predict(regresionlog, datostst, type = "response")
+  datostst$prediccionlog = ifelse(prediccionlog_test > 0.5, 1, 0)
+  datostst$prediccionlog = as.factor(datostst$prediccionlog)
+  
+  # Matriz de confusión para los datos de prueba
+  matriz_test <- confusionMatrix(datostst$prediccionlog, datostst$ventas_altas2)
+  resultados_test <- rbind(resultados_test, data.frame(
+    Fold = i,
+    Accuracy = matriz_test$overall["Accuracy"],
+    Sensitivity = matriz_test$byClass["Sensitivity"],
+    Specificity = matriz_test$byClass["Specificity"]
+  ))
+  
+  # Predicciones en el conjunto de entrenamiento
+  prediccionlog_train <- predict(regresionlog, datostrain, type = "response")
+  datostrain$prediccionlog = ifelse(prediccionlog_train > 0.5, 1, 0)
+  datostrain$prediccionlog = as.factor(datostrain$prediccionlog)
+  
+  # Matriz de confusión para los datos de entrenamiento
+  matriz_train <- confusionMatrix(datostrain$prediccionlog, datostrain$ventas_altas2)
+  resultados_train <- rbind(resultados_train, data.frame(
+    Fold = i,
+    Accuracy = matriz_train$overall["Accuracy"],
+    Sensitivity = matriz_train$byClass["Sensitivity"],
+    Specificity = matriz_train$byClass["Specificity"]
+  ))
+  
+  # Imprimir resultados de cada fold para entrenamiento y prueba
+  cat("Fold:", i, "\n")
+  cat("Datos de prue. - Accuracy:", matriz_test$overall["Accuracy"], 
+      "Sensitivity:", matriz_test$byClass["Sensitivity"], 
+      "Specificity:", matriz_test$byClass["Specificity"], "\n")
+  cat("Datos de entr. - Accuracy:", matriz_train$overall["Accuracy"], 
+      "Sensitivity:", matriz_train$byClass["Sensitivity"], 
+      "Specificity:", matriz_train$byClass["Specificity"], "\n\n")
+}
+
+# Calcular medias de cada métrica en todos los folds
+cat("\nResumen de precisión en datos de prueba y entrenamiento:\n")
+
+print("Datos de prueba")
+print(resultados_test)
+cat("\nPromedio en datos de prueba:\n")
+print(colMeans(resultados_test[, -1]))
+
+print("\nDatos de entrenamiento")
+print(resultados_train)
+cat("\nPromedio en datos de entrenamiento:\n")
+print(colMeans(resultados_train[, -1]))
+
+
+####################################
+
+rm(list=ls())
+
+# Importamos datos Ventas.RData
+load("Ventas.RData")
+datos = datos
+
+# Preparación de datos
+datos$ventas_altas2[datos$ventas_altas=="Si"] = 1
+datos$ventas_altas2[datos$ventas_altas=="No"] = 0
+datos$ventas_altas = NULL
+datos$ventas_altas2 = as.factor(datos$ventas_altas2)
+
+datos$US2[datos$US=="Yes"] = 1
+datos$US2[datos$US=="No"] = 0
+datos$US = NULL
+
+datos$Urban2 = as.numeric(datos$Urban == "Yes")
+datos$Urban = NULL
+
+# Convertir ShelveLoc en una variable ordinal y luego a numérico
+datos$ShelveLoc <- factor(datos$ShelveLoc, levels = c("Bad", "Medium", "Good"), ordered = TRUE)
+datos$ShelveLoc <- as.numeric(datos$ShelveLoc)
+
+# Escalamos los datos
+datos[, c(1,2,3,4,5,6,7,8,10,11)] = scale(datos[, c(1,2,3,4,5,6,7,8,10,11)])
+
+# Inicializamos vectores para almacenar las precisiones
+aciertolog_test = c()
+aciertolog_train = c()
+
+# Validación cruzada
+set.seed(123)  # Para reproducibilidad
+indice = createMultiFolds(datos$ventas_altas2, k = 5, times = 1)
+
+for (i in 1:length(indice)) {
+  datostrain = datos[indice[[i]], ]
+  datostst = datos[-indice[[i]], ]
+  
+  # Ajuste del modelo de regresión logística
+  regresionlog = glm(ventas_altas2 ~ ., data = datostrain, family = binomial)
+  
+  # Predicciones en el conjunto de prueba
+  prediccionlog_test <- predict(regresionlog, datostst, type = "response")
+  datostst$prediccionlog = ifelse(prediccionlog_test > 0.5, 1, 0)
+  datostst$prediccionlog = as.factor(datostst$prediccionlog)
+  
+  # Matriz de confusión para los datos de prueba
+  resultado_test = confusionMatrix(datostst$prediccionlog, datostst$ventas_altas2)$overall["Accuracy"]
+  aciertolog_test = rbind(aciertolog_test, c(resultado_test))
+  
+  # Predicciones en el conjunto de entrenamiento
+  prediccionlog_train <- predict(regresionlog, datostrain, type = "response")
+  datostrain$prediccionlog = ifelse(prediccionlog_train > 0.5, 1, 0)
+  datostrain$prediccionlog = as.factor(datostrain$prediccionlog)
+  
+  # Matriz de confusión para los datos de entrenamiento
+  resultado_train = confusionMatrix(datostrain$prediccionlog, datostrain$ventas_altas2)$overall["Accuracy"]
+  aciertolog_train = rbind(aciertolog_train, c(resultado_train))
+}
+
+# Resumen de resultados
+cat("Precisión promedio en los datos de prueba:", mean(aciertolog_test), "\n")
+cat("Precisión promedio en los datos de entrenamiento:", mean(aciertolog_train), "\n")
+
+# Mostrar los modelos y sus resúmenes
+print(summary(regresionlog))
+
 
 ############################
 
