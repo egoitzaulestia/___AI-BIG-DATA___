@@ -1,6 +1,4 @@
-https://www.geo.fu-berlin.de/en/v/soga/Basics-of-statistics/Continous-Random-Variables/Continuous-Uniform-Distribution/Continuous-Uniform-Distribution-in-R/index.html
-
- #Thanks to : Hartmann, K., Krois, J., Waske, B. (2018): E-Learning Project SOGA: Statistics and Geospatial Data Analysis. Department of Earth Sciences, Freie Universitaet Berlin.
+#Thanks to : Hartmann, K., Krois, J., Waske, B. (2018): E-Learning Project SOGA: Statistics and Geospatial Data Analysis. Department of Earth Sciences, Freie Universitaet Berlin.
 #generamos una sequencia de 0 a 100 numeros enteros
 x_dunif <- seq(0, 100, by = 1) 
 x_dunif
@@ -92,3 +90,4 @@ result
 #that the result of the numerical approach is an approximation to the analytic result. 
 #Keep in mind that the quality of such an approximation is very sensitive on the number of 
 #random variables constituting the sample, in our case the number of measurements.
+

@@ -14,7 +14,6 @@ if(length(new)) install.packages(new)
 a=lapply(packages, require, character.only=TRUE)
 
 
-install.packages("plotly")
 
 
 
@@ -79,103 +78,7 @@ table(datos$ventas_altas2)
 sum((datos$ventas_altas2=="0"))/nrow(datos)
 
 ####################################
-####################################
-####################################
 
-rm(list=ls())
-
-# Importamos datos Ventas.RData
-load("Ventas.RData")
-datos = datos
-
-# Preparación de datos
-datos$ventas_altas2[datos$ventas_altas=="Si"] = 1
-datos$ventas_altas2[datos$ventas_altas=="No"] = 0
-datos$ventas_altas = NULL
-datos$ventas_altas2 = as.factor(datos$ventas_altas2)
-
-datos$US2[datos$US=="Yes"] = 1
-datos$US2[datos$US=="No"] = 0
-datos$US = NULL
-
-datos$Urban2 = as.numeric(datos$Urban == "Yes")
-datos$Urban = NULL
-
-# Convertir ShelveLoc en una variable ordinal y luego a numérico
-datos$ShelveLoc <- factor(datos$ShelveLoc, levels = c("Bad", "Medium", "Good"), ordered = TRUE)
-datos$ShelveLoc <- as.numeric(datos$ShelveLoc)
-
-# Escalamos los datos
-datos[, c(1,2,3,4,5,6,7,8,10,11)] = scale(datos[, c(1,2,3,4,5,6,7,8,10,11)])
-
-# Inicializamos listas para almacenar resultados de cada fold
-resultados_test <- data.frame(Fold = integer(), Accuracy = numeric(), Sensitivity = numeric(), Specificity = numeric())
-resultados_train <- data.frame(Fold = integer(), Accuracy = numeric(), Sensitivity = numeric(), Specificity = numeric())
-
-# Validación cruzada
-set.seed(123)  # Para reproducibilidad
-indice = createMultiFolds(datos$ventas_altas2, k = 5, times = 1)
-
-for (i in 1:length(indice)) {
-  datostrain = datos[indice[[i]], ]
-  datostst = datos[-indice[[i]], ]
-  
-  # Ajuste del modelo de regresión logística
-  regresionlog = glm(ventas_altas2 ~ ., data = datostrain, family = binomial)
-  
-  # Predicciones en el conjunto de prueba
-  prediccionlog_test <- predict(regresionlog, datostst, type = "response")
-  datostst$prediccionlog = ifelse(prediccionlog_test > 0.5, 1, 0)
-  datostst$prediccionlog = as.factor(datostst$prediccionlog)
-  
-  # Matriz de confusión para los datos de prueba
-  matriz_test <- confusionMatrix(datostst$prediccionlog, datostst$ventas_altas2)
-  resultados_test <- rbind(resultados_test, data.frame(
-    Fold = i,
-    Accuracy = matriz_test$overall["Accuracy"],
-    Sensitivity = matriz_test$byClass["Sensitivity"],
-    Specificity = matriz_test$byClass["Specificity"]
-  ))
-  
-  # Predicciones en el conjunto de entrenamiento
-  prediccionlog_train <- predict(regresionlog, datostrain, type = "response")
-  datostrain$prediccionlog = ifelse(prediccionlog_train > 0.5, 1, 0)
-  datostrain$prediccionlog = as.factor(datostrain$prediccionlog)
-  
-  # Matriz de confusión para los datos de entrenamiento
-  matriz_train <- confusionMatrix(datostrain$prediccionlog, datostrain$ventas_altas2)
-  resultados_train <- rbind(resultados_train, data.frame(
-    Fold = i,
-    Accuracy = matriz_train$overall["Accuracy"],
-    Sensitivity = matriz_train$byClass["Sensitivity"],
-    Specificity = matriz_train$byClass["Specificity"]
-  ))
-  
-  # Imprimir resultados de cada fold para entrenamiento y prueba
-  cat("Fold:", i, "\n")
-  cat("Datos de prue. - Accuracy:", matriz_test$overall["Accuracy"], 
-      "Sensitivity:", matriz_test$byClass["Sensitivity"], 
-      "Specificity:", matriz_test$byClass["Specificity"], "\n")
-  cat("Datos de entr. - Accuracy:", matriz_train$overall["Accuracy"], 
-      "Sensitivity:", matriz_train$byClass["Sensitivity"], 
-      "Specificity:", matriz_train$byClass["Specificity"], "\n\n")
-}
-
-# Calcular medias de cada métrica en todos los folds
-cat("\nResumen de precisión en datos de prueba y entrenamiento:\n")
-
-print("Datos de prueba")
-print(resultados_test)
-cat("\nPromedio en datos de prueba:\n")
-print(colMeans(resultados_test[, -1]))
-
-print("\nDatos de entrenamiento")
-print(resultados_train)
-cat("\nPromedio en datos de entrenamiento:\n")
-print(colMeans(resultados_train[, -1]))
-
-
-####################################
 
 rm(list=ls())
 
@@ -274,13 +177,13 @@ datos$ShelveLoc <- as.numeric(datos$ShelveLoc)  # Convertir a valores numéricos
 
 # Eliminación de variables no significativas
 datos$Population= NULL
-datos$Age= NULL
+# datos$Age= NULL
 datos$Education= NULL
 datos$US2= NULL
 datos$Urban2= NULL
 
 # Escalamos los datos
-datos[,c(1,2,3,4,6)] = scale(datos[,c(1,2,3,4,6)])
+datos[, c(1,2,3,4,5,6)] = scale(datos[, c(1,2,3,4,5,6)])
 
 aciertolog=c()
 indice = createMultiFolds(datos$ventas_altas2, k = 5, times = 1) # Cogemos nuestra variable a elegir
@@ -363,66 +266,6 @@ fig <- plot_ly(df_acierto, x = ~Fold, y = ~Accuracy, type = 'bar', name = 'Accur
 
 # Mostrar el gráfico
 fig
-
-
-
-#############
-
-# Cargar las librerías necesarias
-library(plotly)
-library(dplyr)
-
-# Convertimos el vector aciertolog en un data frame para la visualización de precisión
-df_acierto <- data.frame(
-  Fold = 1:length(aciertolog),
-  Accuracy = aciertolog
-)
-
-# Calculamos la media de precisión
-mean_accuracy <- mean(aciertolog)
-
-# Crear un data frame para la distribución de clases
-class_distribution <- datos %>%
-  count(ventas_altas2) %>%
-  mutate(percentage = n / sum(n) * 100,
-         label = ifelse(ventas_altas2 == 1, "Sí", "No"))
-
-# Creamos el gráfico interactivo con Plotly
-fig <- plot_ly()
-
-# Agregar gráfico de barras para precisión en cada pliegue
-fig <- fig %>% 
-  add_trace(data = df_acierto, x = ~Fold, y = ~Accuracy, type = 'bar', name = 'Accuracy per Fold', 
-            marker = list(color = 'skyblue')) %>%
-  add_trace(y = ~rep(mean_accuracy, length(aciertolog)), type = 'scatter', mode = 'lines', 
-            line = list(color = 'red', dash = 'dash'), name = 'Mean Accuracy') %>%
-  layout(
-    title = "Precisión en cada Fold de la Validación Cruzada y Distribución de Clases",
-    xaxis = list(title = "Fold"),
-    yaxis = list(title = "Precisión (Accuracy)"),
-    annotations = list(
-      x = 1, y = mean_accuracy, text = paste("Precisión Promedio:", round(mean_accuracy, 3)), 
-      xref = "x", yref = "y", showarrow = TRUE, arrowhead = 7, ax = 0, ay = -40
-    )
-  )
-
-# Agregar gráfico de pastel (pie) para distribución de clases
-fig <- fig %>%
-  add_pie(data = class_distribution, labels = ~label, values = ~percentage, 
-          textinfo = 'label+percent', domain = list(x = c(0.8, 1), y = c(0.2, 0.8)), 
-          name = "Distribución de Clases") %>%
-  layout(
-    showlegend = TRUE
-  )
-
-# Mostrar el gráfico
-fig
-
-
-
-# PARA ESCALADO
-# utilizamos scale, y también data.normalization
-
 
 
 
@@ -745,6 +588,101 @@ ggplot(aciertos_naive, aes(x = Laplace, y = Accuracy)) +
 
 
 
+###############
+# Random Forest #
+###############
+
+# Cargar librerías necesarias
+packages <- c("tibble", "e1071", "rpart", "caret", "ggplot2", "randomForest", "data.table")
+new <- packages[!(packages %in% installed.packages()[, "Package"])]
+if (length(new)) install.packages(new)
+lapply(packages, require, character.only = TRUE)
+
+rm(list = ls())
+set.seed(42)
+
+# Importamos datos Ventas.RData
+load("Ventas.RData")
+datos <- datos
+
+# Preprocesamiento de datos
+datos$ventas_altas2[datos$ventas_altas == "Si"] <- 1
+datos$ventas_altas2[datos$ventas_altas == "No"] <- 0
+datos$ventas_altas <- NULL
+datos$ventas_altas2 <- as.factor(datos$ventas_altas2)
+
+datos$US2[datos$US == "Yes"] <- 1
+datos$US2[datos$US == "No"] <- 0
+datos$US <- NULL
+
+datos$Urban2 <- as.numeric(datos$Urban == "Yes")
+datos$Urban <- NULL
+
+# Convertir ShelveLoc en una variable ordinal con valores específicos
+datos$ShelveLoc <- factor(datos$ShelveLoc, levels = c("Bad", "Medium", "Good"), ordered = TRUE)
+datos$ShelveLoc <- as.numeric(datos$ShelveLoc)  # Convertir a valores numéricos
+
+# Escalar los datos
+datos[, c(1, 2, 3, 4, 5, 6, 7, 8, 10, 11)] <- scale(datos[, c(1, 2, 3, 4, 5, 6, 7, 8, 10, 11)])
+
+# Validación cruzada Random Forest
+aciertoRF <- c()  # Vector para almacenar accuracies
+
+# División de datos en folds para validación cruzada
+indice <- createMultiFolds(datos$ventas_altas2, k = 5, times = 1)
+
+for (i in 1:length(indice)) {
+  datostrain <- datos[indice[[i]], ]
+  datostst <- datos[-indice[[i]], ]
+  
+  # Entrenamiento del modelo Random Forest
+  modeloRF <- randomForest(
+    ventas_altas2 ~ ., 
+    data = datostrain, 
+    ntree = 500,          # Número de árboles
+    mtry = 4,             # Número de variables consideradas en cada división
+    importance = TRUE,    # Calcular importancia de las variables
+    nodesize = 1,         # Tamaño mínimo de nodos
+    maxnodes = 30         # Máximo número de nodos por árbol
+  )
+  
+  # Predicciones en el conjunto de prueba
+  prediccionRF <- predict(modeloRF, datostst, type = "class")
+  
+  # Calcular precisión para este fold
+  accuracy <- confusionMatrix(prediccionRF, datostst$ventas_altas2)$overall["Accuracy"]
+  aciertoRF <- rbind(aciertoRF, c(accuracy))
+}
+
+# Resultados finales
+cat("Precisión promedio (validación cruzada):", mean(aciertoRF), "\n")
+cat("Desviación estándar de la precisión:", sd(aciertoRF), "\n")
+
+
+# Calcular la importancia de las variables
+if ("importance" %in% names(modeloRF)) {
+  importancia <- as.data.frame(modeloRF$importance)
+  importancia <- importancia[order(importancia$MeanDecreaseGini, decreasing = TRUE), ]
+  
+  # Visualización de importancia de características
+  library(ggplot2)
+  ggplot(importancia, aes(x = reorder(rownames(importancia), MeanDecreaseGini), y = MeanDecreaseGini)) +
+    geom_bar(stat = "identity", fill = "blue") +
+    coord_flip() +
+    labs(title = "Importancia de Características (Random Forest)",
+         x = "Características",
+         y = "Importancia (Mean Decrease Gini)") +
+    theme_minimal()
+} else {
+  cat("El modelo no contiene información de importancia de variables.\n")
+}
+
+
+# Mostrar la matriz de confusión del último fold
+confusionMatrix(prediccionRF, datostst$ventas_altas2)
+
+
+
 
 ###############
 # XGBoost #
@@ -840,3 +778,153 @@ cat("Desviación estándar de la precisión:", sd(aciertoXGB), "\n")
 # Graficar importancia de características
 importancia <- xgb.importance(model = modeloXGB)
 xgb.plot.importance(importancia, top_n = 10, main = "Importancia de Características")
+
+
+# Cargar las librerías necesarias
+library(plotly)
+
+# Crear un dataframe con las precisiones por fold
+df_acierto <- data.frame(
+  Fold = factor(1:length(aciertoXGB)),  # Número de cada fold
+  Accuracy = aciertoXGB                # Precisión de cada fold
+)
+
+# Calcular la precisión promedio
+mean_accuracy <- mean(aciertoXGB)
+
+# Gráfico de precisión por fold con ggplot2
+library(ggplot2)
+
+ggplot(df_acierto, aes(x = Fold, y = Accuracy)) +
+  geom_bar(stat = "identity", fill = "steelblue") +  # Barras para cada fold
+  geom_hline(yintercept = mean_accuracy, color = "red", linetype = "dashed", size = 1) +  # Línea de precisión promedio
+  annotate("text", x = length(aciertoXGB) - 0.5, y = mean_accuracy + 0.01, 
+           label = paste("Precisión Promedio:", round(mean_accuracy, 3)), 
+           color = "red", size = 4, hjust = 1) +  # Etiqueta de precisión promedio
+  labs(
+    title = "Precisión en cada Fold de la Validación Cruzada",
+    x = "Fold",
+    y = "Precisión (Accuracy)"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+    axis.title = element_text(size = 12),
+    axis.text = element_text(size = 10)
+  )
+
+
+
+
+##################
+# Redes Neuronales #
+##################
+
+# # Cargar librerías necesarias
+# packages <- c("ggplot2", "caret", "neuralnet", "NeuralNetTools", "nnet", "clusterSim")
+# new <- packages[!(packages %in% installed.packages()[, "Package"])]
+# if (length(new)) install.packages(new)
+# lapply(packages, require, character.only = TRUE)
+# 
+# rm(list = ls())
+# set.seed(42)
+# 
+# # Importamos datos Ventas.RData
+# load("Ventas.RData")
+# datos <- datos
+# 
+# # Preprocesamiento de datos
+# datos$ventas_altas2[datos$ventas_altas == "Si"] <- 1
+# datos$ventas_altas2[datos$ventas_altas == "No"] <- 0
+# datos$ventas_altas <- NULL
+# datos$ventas_altas2 <- as.factor(datos$ventas_altas2)
+# 
+# datos$US2[datos$US == "Yes"] <- 1
+# datos$US2[datos$US == "No"] <- 0
+# datos$US <- NULL
+# 
+# datos$Urban2 <- as.numeric(datos$Urban == "Yes")
+# datos$Urban <- NULL
+# 
+# # Convertir ShelveLoc en una variable ordinal con valores específicos
+# datos$ShelveLoc <- factor(datos$ShelveLoc, levels = c("Bad", "Medium", "Good"), ordered = TRUE)
+# datos$ShelveLoc <- as.numeric(datos$ShelveLoc)  # Convertir a valores numéricos
+# 
+# # Escalar los datos
+# minimos <- as.numeric(apply(datos[, -11], 2, min))
+# maximos <- as.numeric(apply(datos[, -11], 2, max))
+# datos_norm <- data.Normalization(datos[, -11], type = "n4", normalization = "column")
+# datos <- cbind(datos_norm, ventas_altas2 = datos$ventas_altas2)
+# 
+# # Preparar datos para validación cruzada
+# indice <- createDataPartition(datos$ventas_altas2, p = 0.8, times = 1, list = FALSE)
+# 
+# datostra <- datos[indice, ]
+# datostst <- datos[-indice, ]
+# 
+# labeltra <- class.ind(as.numeric(datostra$ventas_altas2))
+# labeltst <- class.ind(as.numeric(datostst$ventas_altas2))
+# 
+# datostra$ventas_altas2 <- NULL
+# datostst$ventas_altas2 <- NULL
+# 
+# # Crear fórmula válida excluyendo la variable objetivo
+# formula <- as.formula(
+#   paste(
+#     paste(colnames(labeltra), collapse = " + "),  # Variables objetivo
+#     "~",
+#     paste(setdiff(colnames(datostra), "ventas_altas2"), collapse = " + ")  # Variables predictoras
+#   )
+# )
+# 
+# # Verificar fórmula
+# print(formula)
+# 
+# # Asegurarte de que los datos están correctamente preparados
+# if (anyNA(datostra)) stop("Valores NA encontrados en datostra.")
+# if (anyNA(labeltra)) stop("Valores NA encontrados en labeltra.")
+# 
+# # Eliminar la columna ventas_altas2 de datostra si aún está presente
+# datostra <- datostra[, !colnames(datostra) %in% "ventas_altas2"]
+# 
+# # Entrenar el modelo de red neuronal
+# modelo <- neuralnet(
+#   formula,
+#   data = cbind(datostra, labeltra),  # Combinar predictores y objetivo
+#   hidden = c(10, 9),                # Capas ocultas
+#   linear.output = FALSE,
+#   lifesign = "full",
+#   stepmax = 20000,
+#   rep = 7,
+#   algorithm = "rprop+",
+#   threshold = 0.05
+# )
+# 
+# # Evaluar modelo (si el entrenamiento es exitoso)
+# plot(modelo)
+# 
+# 
+# # Realizar predicciones en el conjunto de prueba
+# prediccion <- compute(modelo, datostst)
+# prediccion_result <- prediccion$net.result
+# 
+# # Convertir predicciones a clases binarias
+# prediccion_df <- as.data.frame(prediccion_result)
+# colnames(prediccion_df) <- colnames(labeltst)
+# 
+# prediccion_final <- apply(prediccion_df, 1, which.max) - 1  # Restar 1 para que coincida con las clases originales
+# labeltst_final <- apply(labeltst, 1, which.max) - 1
+# 
+# # Evaluación de resultados
+# prediccion_factor <- as.factor(prediccion_final)
+# labeltst_factor <- as.factor(labeltst_final)
+# 
+# resultado <- confusionMatrix(prediccion_factor, labeltst_factor)
+# print(resultado)
+# 
+# # Visualizar resultados
+# summary(prediccion_factor)
+# summary(labeltst_factor)
+# 
+# # Graficar la red neuronal
+# plot(modelo)
