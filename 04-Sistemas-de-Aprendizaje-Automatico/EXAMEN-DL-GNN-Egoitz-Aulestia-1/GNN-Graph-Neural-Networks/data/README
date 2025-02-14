@@ -1,0 +1,29 @@
+Este directorio contiene una selección del conjunto de datos Cora (www.research.whizbang.com/data).
+
+El conjunto de datos Cora consiste en artículos sobre Aprendizaje Automático. Estos artículos están clasificados en una de las siguientes siete categorías:
+	Case_Based
+	Genetic_Algorithms
+	Neural_Networks
+	Probabilistic_Methods
+	Reinforcement_Learning
+	Rule_Learning
+	Theory
+
+Los artículos fueron seleccionados de manera que, en el corpus final, cada artículo cite o sea citado por al menos otro artículo. Hay 2708 artículos en todo el corpus.
+
+Después de aplicar stemming y eliminar stopwords, nos quedamos con un vocabulario de tamaño 1433 palabras únicas. Todas las palabras con una frecuencia en los documentos menor a 10 fueron eliminadas.
+
+
+EL DIRECTORIO CONTIENE DOS ARCHIVOS:
+
+El archivo .content contiene descripciones de los artículos en el siguiente formato:
+
+	<paper_id> <word_attributes>+ <class_label>  
+
+La primera entrada en cada línea contiene el identificador único en formato de cadena del artículo, seguido de valores binarios que indican si cada palabra en el vocabulario está presente (indicado por 1) o ausente (indicado por 0) en el artículo. Finalmente, la última entrada en la línea contiene la etiqueta de clase del artículo.
+
+El archivo .cites contiene el grafo de citaciones del corpus. Cada línea describe un enlace en el siguiente formato:
+
+	<ID del artículo citado> <ID del artículo que cita>  
+
+Cada línea contiene dos identificadores de artículos. La primera entrada es el ID del artículo que está siendo citado y el segundo ID corresponde al artículo que contiene la cita. La dirección del enlace es de derecha a izquierda. Si una línea está representada por "paper1 paper2", entonces el enlace es "paper2->paper1".

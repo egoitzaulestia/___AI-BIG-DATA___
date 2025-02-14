@@ -1,0 +1,65 @@
+PyTorch Geometric vs. TensorFlow para Grafos: ¿Cuál es mejor?
+
+Depende de qué tan avanzado y flexible quieramos que sea nuestro modelo de grafos. A continuación, explicamos las diferencias clave entre PyTorch Geometric (PyG) y TensorFlow (TF/GNNs) para redes neuronales de grafos (Graph Neural Networks - GNNs).
+
+-———————————————————————————————————
+
+🔹 PyTorch Geometric (PyG)
+
+✅ Ventajas
+
+✔ Simplicidad y flexibilidad:
+    - Muy fácil de usar, especialmente para investigación. 
+    - Similar a PyTorch estándar, con estructuras claras para manipular grafos.
+
+✔ Optimizado para grandes grafos:
+    - Maneja eficientemente millones de nodos y aristas. 
+    - Implementa técnicas avanzadas como mini-batching para GNNs.
+
+✔ Biblioteca más madura para GNNs:
+    - Gran cantidad de arquitecturas predefinidas (GCN, GAT, GraphSAGE, etc.).
+    - Comunidad activa en gráficos y aprendizaje profundo.
+
+✔ Mejor para investigación:
+    - PyG es usado en papers y benchmarks de vanguardia.
+    - Fácil de modificar y probar nuevas arquitecturas de grafos.
+
+🔻 Desventajas
+    ❌ No tiene una integración tan fuerte con TensorFlow/Keras.
+    ❌ La documentación es un poco técnica para principiantes.
+
+-———————————————————————————————————
+
+🔹 TensorFlow Graph Neural Networks (TF-GNN)
+
+✅ Ventajas
+
+✔ Integración con TensorFlow y Keras:
+    - Útil si ya trabajas con modelos de TensorFlow/Keras.
+    - Permite entrenar modelos híbridos con otras redes neuronales.
+
+✔ Soporte para producción (Google Cloud, TensorFlow Serving):
+    - Fácil de desplegar en Google Cloud AI o TensorFlow Extended (TFX).
+
+✔ Ideal para aplicaciones empresariales:
+    - Google lo usa para recomendaciones y búsquedas basadas en grafos.
+
+🔻 Desventajas
+    ❌ Menos flexible y menos maduro que PyG.
+        - No tiene tantas arquitecturas GNN predefinidas.
+        - Requiere más código para hacer tareas avanzadas.
+    ❌ Menos comunidad y ejemplos.
+        - No tiene tanta adopción en papers de investigación.
+
+-———————————————————————————————————
+
+🔥 ¿Cuál elegir?
+
+✅ Si quieremos facilidad, rapidez y pruebas de modelos GNNs → PyTorch Geometric (PyG).
+✅ Si ya trabajamos con TensorFlow y necesitamos integración en producción → TensorFlow GNN.
+
+💡 Recomendación para Cora Dataset:
+Para clasificar los nodos en el dataset Cora, la mejor opción es PyTorch Geometric, ya que:
+✔ Tiene modelos GCN y GAT listos para usar.
+✔ Permite trabajar eficientemente con estructuras de grafos.
+✔ Hay más ejemplos y documentación para tareas con este dataset.
