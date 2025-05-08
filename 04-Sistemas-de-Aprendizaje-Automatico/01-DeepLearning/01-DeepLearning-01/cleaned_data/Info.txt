@@ -1,0 +1,12 @@
+Kaggle House Price Prediction Competition
+
+For Beginners Cleaning the data the right way might be difficult.
+
+If you just want to explore creating and evaluating model then this dataset is ready for model fitting.
+
+Info about cleaning:
+1) Fixed Missing values
+2) Fixed Outliers
+3) Fixed Skewness of entire dataset
+4) Included new Features
+5) Log and Square Transformations for required features
